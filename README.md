@@ -16,7 +16,8 @@ A comprehensive web-based healthcare management system built with Python Flask. 
 *   **APIs:** OpenAI API (for Symptom Checker)
 
 ## ⚙️ How to Run This Project Locally
-
+## 👩‍💻 Developer
+*   **Anum Ashraf** - *Final Year Project*
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/anumashraf237-art/My-FYP-Project.git
