@@ -1,0 +1,308 @@
+
+<!-- ✅ Full Page Confirmation -->
+{% if confirmation_data %}
+<section style="min-height:80vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background:#e8f5e9; border-radius:12px; margin:60px auto; max-width:800px; padding:60px; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+  <h1 style="color:#285943; font-size:2em; margin-bottom:20px;">🎉 Appointment Confirmed!</h1>
+
+  <p style="font-size:1.2em; color:#2c5530; margin-bottom:30px;">
+    Dear <b>{{ confirmation_data.patient_name }}</b>, your appointment with 
+    <b>Dr. {{ confirmation_data.doctor_name }}</b> ({{ confirmation_data.specialization }}) 
+    has been successfully booked!
+  </p>
+
+  <div style="background:white; border:1px solid #ccc; border-radius:8px; padding:20px 40px; text-align:left; max-width:500px; margin-bottom:30px;">
+    <p><strong>Appointment ID:</strong> {{ confirmation_data.appointment_id }}</p>
+    <p><strong>Email:</strong> {{ confirmation_data.email }}</p>
+    <p><strong>Date:</strong> {{ confirmation_data.appointment_date }}</p>
+    <p><strong>Time Slot:</strong> {{ confirmation_data.appointment_time }}</p>
+    {% if confirmation_data.message %}
+    <p><strong>Message:</strong> {{ confirmation_data.message }}</p>
+    {% endif %}
+    <p><strong>Payment Status:</strong> 
+      <span style="background:#28a745; color:white; padding:3px 10px; border-radius:4px;">
+        {{ confirmation_data.payment_status }}
+      </span>
+    </p>
+    {% if confirmation_data.payment_id %}
+    <p><strong>Payment ID:</strong> {{ confirmation_data.payment_id }}</p>
+    {% endif %}
+  </div>
+
+  <p style="color:#2c5530; font-size:1.1em; margin-bottom:30px;">
+    📧 We've also sent a confirmation email to your registered address: 
+    <b>{{ confirmation_data.email }}</b>. Please check your inbox or spam folder.
+  </p>
+
+  <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:15px;">
+    <a href="{{ url_for('appointment') }}"
+       style="background:#285943; color:white; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:600;">
+       🔁 Book Another Appointment
+    </a>
+    <a href="{{ url_for('view_appointments') }}"
+       style="background:#0077b6; color:white; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:600;">
+       👀 View Appointments
+    </a>
+  </div>
+</section>
+
+{% else %}
+
+<!-- ✅ Appointment Booking Form with Auto-fill from Symptom Checker -->
+<section style="max-width:800px; margin:60px auto; background:white; padding:40px; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+  <h2 style="text-align:center; color:#285943; margin-bottom:30px;">📅 Book an Appointment</h2>
+
+  {% if error %}
+    <p style="color:red; text-align:center; padding:10px; background:#ffe6e6; border-radius:6px;">{{ error }}</p>
+  {% endif %}
+
+  <form action="{{ url_for('appointment') }}" method="POST" id="appointment-form" style="display:grid; gap:20px;">
+    
+    <!-- Section 1: Appointment Details -->
+    <div style="border-bottom: 2px solid #e8f5e9; padding-bottom: 20px;">
+      <h3 style="color:#285943; margin-bottom:20px;">👨‍⚕️ Appointment Details</h3>
+      
+      <div style="margin-bottom:15px;">
+        <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Doctor Name</label>
+        <input type="text" name="doctor_name" id="doctor_name" placeholder="Enter doctor name" required
+               style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Specialization</label>
+        <input type="text" name="specialization" id="specialization" placeholder="Doctor specialization" required
+               style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Your Name</label>
+        <input type="text" name="patient_name" id="patient_name" placeholder="Enter your full name" required
+               style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Email</label>
+        <input type="email" name="email" id="email" placeholder="Enter your email" required
+               style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Message / Concern</label>
+        <textarea name="message" id="message" rows="4" placeholder="Describe your symptoms or reason for appointment"
+                  style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;"></textarea>
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Select Date</label>
+        <input type="date" name="appointment_date" id="appointment_date" required
+               style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;" min="{{ today_date }}">
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Select Time Slot</label>
+        <select name="appointment_time" id="appointment_time" required
+                style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+          <option value="" disabled selected>Choose a time slot</option>
+          <option value="09:00 AM - 10:00 AM">09:00 AM - 10:00 AM</option>
+          <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+          <option value="11:00 AM - 12:00 PM">11:00 AM - 12:00 PM</option>
+          <option value="01:00 PM - 02:00 PM">01:00 PM - 02:00 PM</option>
+          <option value="02:00 PM - 03:00 PM">02:00 PM - 03:00 PM</option>
+          <option value="03:00 PM - 04:00 PM">03:00 PM - 04:00 PM</option>
+        </select>
+      </div>
+    </div>
+<input type="hidden" name="doctor_id" id="doctor_id">
+    <!-- Section 2: Payment Information -->
+    <div style="border-bottom: 2px solid #e8f5e9; padding-bottom: 20px;">
+      <h3 style="color:#285943; margin-bottom:20px;">💳 Payment Information</h3>
+
+      <div style="margin-bottom:15px;">
+        <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Payment Type</label>
+        <select name="payment_type" id="payment_type" required
+                style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;"
+                onchange="togglePaymentFields()">
+          <option value="" disabled selected>Select payment type</option>
+          <option value="Cash">Cash</option>
+          <option value="Online">Online</option>
+        </select>
+      </div>
+
+      <div id="online-section" style="display:none;">
+        <div style="margin-bottom:15px;">
+          <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Select Online Method</label>
+          <select name="payment_method" id="payment_method"
+                  style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;"
+                  onchange="toggleOnlineDetails()">
+            <option value="" disabled selected>Select online method</option>
+            <option value="Credit Card">Credit Card</option>
+            <option value="Debit Card">Debit Card</option>
+            <option value="Digital Wallet">Digital Wallet</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+          </select>
+        </div>
+
+        <div id="card-details" style="display:none;">
+          <div style="margin-bottom:15px;">
+            <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Card Number</label>
+            <input type="text" name="card_number" placeholder="Enter card number"
+                   style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom:15px;">
+            <div>
+              <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Expiry Date</label>
+              <input type="month" name="expiry_date"
+                     style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+            </div>
+            <div>
+              <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">CVV</label>
+              <input type="text" name="cvv" placeholder="CVV" maxlength="4"
+                     style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+            </div>
+          </div>
+          <div style="margin-bottom:15px;">
+            <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Cardholder Name</label>
+            <input type="text" name="cardholder_name" placeholder="Enter name on card"
+                   style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+          </div>
+        </div>
+
+        <div id="wallet-details" style="display:none;">
+          <div style="margin-bottom:15px;">
+            <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Wallet Provider</label>
+            <select name="wallet_provider"
+                    style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+              <option value="" disabled selected>Select wallet</option>
+              <option value="Google Pay">Google Pay</option>
+              <option value="PhonePe">PhonePe</option>
+              <option value="Paytm">Paytm</option>
+              <option value="Amazon Pay">Amazon Pay</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="bank-details" style="display:none;">
+          <div style="margin-bottom:15px;">
+            <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Bank Name</label>
+            <input type="text" name="bank_name" placeholder="Enter bank name"
+                   style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+          </div>
+          <div style="margin-bottom:15px;">
+            <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Transaction ID</label>
+            <input type="text" name="transaction_id" placeholder="Enter transaction ID"
+                   style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="font-weight:600; color:#2c5530; display:block; margin-bottom:5px;">Amount</label>
+        <input type="text" value="2500 Rs" readonly
+               style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px; background-color:#f5f5f5;">
+      </div>
+    </div>
+
+    <div style="text-align:center;">
+      <button type="submit"
+              style="background:#285943; color:white; border:none; padding:14px 30px; font-size:1.1em; font-weight:600; border-radius:8px; cursor:pointer; width:100%;">
+        ✅ Confirm Appointment & Pay
+      </button>
+    </div>
+  </form>
+
+  <div style="text-align:center; margin-top:25px;">
+    <a href="{{ url_for('symptom_checker_api') }}"
+       style="color:#285943; text-decoration:none; font-weight:500;"> ← Back to Symptom Checker</a>
+  </div>
+</section>
+
+<script>
+// ✅ Auto-fill form from URL parameters
+function fillFormFromParams() {
+    const params = new URLSearchParams(window.location.search);
+
+    const doctorName = params.get('doctor_name');
+    const specialization = params.get('specialization');
+    const patientName = params.get('patient_name');
+    const email = params.get('email');
+    const urlParams = new URLSearchParams(window.location.search);
+const doctorId = urlParams.get('doctor_id');
+
+if (doctorId) {
+    document.getElementById('doctor_id').value = doctorId;
+}
+
+    if (doctorName) document.getElementById('doctor_name').value = doctorName;
+    if (specialization) document.getElementById('specialization').value = specialization;
+    if (patientName) document.getElementById('patient_name').value = patientName;
+    if (email) document.getElementById('email').value = email;
+}
+
+// ✅ Payment fields toggle
+function togglePaymentFields() {
+    const paymentType = document.getElementById('payment_type').value;
+    const onlineSection = document.getElementById('online-section');
+    
+    if (paymentType === 'Online') {
+        onlineSection.style.display = 'block';
+    } else {
+        onlineSection.style.display = 'none';
+        // Reset online payment fields when switching to Cash
+        document.getElementById('payment_method').value = '';
+        document.getElementById('card-details').style.display = 'none';
+        document.getElementById('wallet-details').style.display = 'none';
+        document.getElementById('bank-details').style.display = 'none';
+    }
+}
+
+function toggleOnlineDetails() {
+    const method = document.getElementById('payment_method').value;
+    
+    // Hide all detail sections first
+    document.getElementById('card-details').style.display = 'none';
+    document.getElementById('wallet-details').style.display = 'none';
+    document.getElementById('bank-details').style.display = 'none';
+
+    // Show relevant section based on payment method
+    if (method === 'Credit Card' || method === 'Debit Card') {
+        document.getElementById('card-details').style.display = 'block';
+    } else if (method === 'Digital Wallet') {
+        document.getElementById('wallet-details').style.display = 'block';
+    } else if (method === 'Bank Transfer') {
+        document.getElementById('bank-details').style.display = 'block';
+    }
+}
+
+// ✅ Form validation
+document.getElementById('appointment-form').addEventListener('submit', function(e) {
+    const paymentType = document.getElementById('payment_type').value;
+    const paymentMethod = document.getElementById('payment_method').value;
+    
+    // Basic validation
+    if (!paymentType) {
+        e.preventDefault();
+        alert('Please select a payment type');
+        return false;
+    }
+    
+    if (paymentType === 'Online' && !paymentMethod) {
+        e.preventDefault();
+        alert('Please select an online payment method');
+        return false;
+    }
+    
+    // Add loading indicator
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '⏳ Processing...';
+    submitBtn.disabled = true;
+});
+
+// ✅ Auto-fill when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    fillFormFromParams();
+    
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('appointment_date').setAttribute('min', today);
+});
+</script>
+{% endif %}

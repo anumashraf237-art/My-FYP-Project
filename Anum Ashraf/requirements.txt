@@ -1,0 +1,6 @@
+Flask
+flask-cors
+mysql-connector-python
+SpeechRecognition==3.10.0
+pyttsx3==2.90
+PyAudio==0.2.11

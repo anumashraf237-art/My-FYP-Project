@@ -1,0 +1,612 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - Doctor Appointment Hub{% endblock %}
+
+{% block content %}
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, var(--forest) 0%, var(--deep-sage) 100%);
+        color: white;
+        padding: 100px 10%;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .about-hero h1 {
+        font-size: 3.2em;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .about-hero p {
+        font-size: 1.3em;
+        max-width: 700px;
+        margin: 0 auto;
+        opacity: 0.9;
+        line-height: 1.6;
+    }
+
+    .mission-vision {
+        padding: 100px 10%;
+        background: var(--white);
+    }
+
+    .mission-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+        margin-top: 50px;
+    }
+
+    .mission-card {
+        background: var(--light-gray);
+        padding: 50px 40px;
+        border-radius: 15px;
+        text-align: center;
+        position: relative;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .mission-card:hover {
+        border-color: var(--amber);
+        transform: translateY(-5px);
+    }
+
+    .mission-icon {
+        font-size: 3.5em;
+        color: var(--amber);
+        margin-bottom: 25px;
+    }
+
+    .mission-card h3 {
+        font-size: 1.8em;
+        color: var(--forest);
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .mission-card p {
+        color: #666;
+        line-height: 1.7;
+        font-size: 1.1em;
+    }
+
+    .story-section {
+        padding: 100px 10%;
+        background: var(--light-gray);
+    }
+
+    .story-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .story-text h2 {
+        font-size: 2.5em;
+        color: var(--forest);
+        margin-bottom: 30px;
+        font-weight: 700;
+    }
+
+    .story-text p {
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 25px;
+        font-size: 1.1em;
+    }
+
+    .story-image {
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px var(--shadow-dark);
+    }
+
+    .story-image img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .story-image:hover img {
+        transform: scale(1.05);
+    }
+
+    .values-section {
+        padding: 100px 10%;
+        background: var(--white);
+    }
+
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+
+    .value-card {
+        text-align: center;
+        padding: 40px 30px;
+        background: var(--light-gray);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .value-card:hover {
+        border-color: var(--amber);
+        transform: translateY(-5px);
+    }
+
+    .value-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--amber);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        font-size: 2em;
+        color: #222;
+    }
+
+    .value-card h3 {
+        color: var(--forest);
+        margin-bottom: 15px;
+        font-size: 1.4em;
+        font-weight: 600;
+    }
+
+    .value-card p {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    .team-section {
+        padding: 100px 10%;
+        background: var(--light-gray);
+    }
+
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+        margin-top: 50px;
+    }
+
+    .team-member {
+        background: var(--white);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px var(--shadow);
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+
+    .team-member:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px var(--shadow-dark);
+    }
+
+    .member-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .member-info {
+        padding: 30px;
+    }
+
+    .member-name {
+        font-size: 1.4em;
+        color: var(--forest);
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    .member-role {
+        color: var(--amber);
+        font-weight: 600;
+        margin-bottom: 15px;
+        font-size: 1.1em;
+    }
+
+    .member-bio {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    .member-social {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .member-social a {
+        width: 40px;
+        height: 40px;
+        background: var(--light-gray);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--forest);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .member-social a:hover {
+        background: var(--amber);
+        color: #222;
+        transform: translateY(-3px);
+    }
+
+    .stats-section {
+        padding: 80px 10%;
+        background: linear-gradient(135deg, var(--forest) 0%, var(--deep-sage) 100%);
+        color: white;
+        text-align: center;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 40px;
+        margin-top: 50px;
+    }
+
+    .stat-item {
+        padding: 30px;
+    }
+
+    .stat-number {
+        font-size: 3.5em;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: var(--amber);
+    }
+
+    .stat-label {
+        font-size: 1.2em;
+        opacity: 0.9;
+    }
+
+    .achievements-section {
+        padding: 100px 10%;
+        background: var(--white);
+    }
+
+    .achievements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+
+    .achievement-card {
+        text-align: center;
+        padding: 40px 30px;
+        background: var(--light-gray);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .achievement-card:hover {
+        background: var(--amber);
+        color: #222;
+        transform: translateY(-5px);
+    }
+
+    .achievement-card:hover h3,
+    .achievement-card:hover p {
+        color: #222;
+    }
+
+    .achievement-icon {
+        font-size: 3em;
+        margin-bottom: 20px;
+    }
+
+    .achievement-card h3 {
+        color: var(--forest);
+        margin-bottom: 15px;
+        font-size: 1.3em;
+        font-weight: 600;
+    }
+
+    .achievement-card p {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    .cta-section {
+        padding: 100px 10%;
+        background: linear-gradient(135deg, var(--amber) 0%, var(--amber-dark) 100%);
+        color: #222;
+        text-align: center;
+    }
+
+    .cta-content h2 {
+        font-size: 2.8em;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .cta-content p {
+        font-size: 1.2em;
+        margin-bottom: 40px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-cta-primary {
+        background: var(--forest);
+        color: white;
+        padding: 15px 35px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cta-primary:hover {
+        background: var(--deep-sage);
+        transform: translateY(-3px);
+    }
+
+    .btn-cta-secondary {
+        background: transparent;
+        color: var(--forest);
+        border: 2px solid var(--forest);
+        padding: 15px 35px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cta-secondary:hover {
+        background: var(--forest);
+        color: white;
+        transform: translateY(-3px);
+    }
+
+    @media (max-width: 768px) {
+        .story-content {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+        
+        .about-hero h1 {
+            font-size: 2.5em;
+        }
+        
+        .story-text h2 {
+            font-size: 2em;
+        }
+        
+        .cta-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .mission-grid,
+        .values-grid,
+        .team-grid,
+        .achievements-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="about-hero">
+    <h1>Transforming Healthcare, One Patient at a Time</h1>
+    <p>We are committed to making quality healthcare accessible, affordable, and convenient for everyone through innovative technology and compassionate care.</p>
+</section>
+
+<!-- Mission & Vision -->
+<section class="mission-vision">
+    <h2 class="section-title">Our Mission & Vision</h2>
+    <p class="section-subtitle">Driven by a passion for better healthcare outcomes</p>
+    
+    <div class="mission-grid">
+        <div class="mission-card">
+            <div class="mission-icon">
+                <i class="fas fa-bullseye"></i>
+            </div>
+            <h3>Our Mission</h3>
+            <p>To revolutionize healthcare access by connecting patients with top medical professionals through an intuitive, secure, and efficient platform that prioritizes patient well-being and medical excellence.</p>
+        </div>
+        
+        <div class="mission-card">
+            <div class="mission-icon">
+                <i class="fas fa-eye"></i>
+            </div>
+            <h3>Our Vision</h3>
+            <p>To become the world's most trusted healthcare platform, breaking down barriers to quality medical care and creating a future where everyone has immediate access to the healthcare they deserve.</p>
+        </div>
+        
+        <div class="mission-card">
+            <div class="mission-icon">
+                <i class="fas fa-hand-holding-heart"></i>
+            </div>
+            <h3>Our Promise</h3>
+            <p>We promise to deliver exceptional patient experiences through innovative technology, qualified medical professionals, and a commitment to continuous improvement in healthcare delivery.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Our Story -->
+<section class="story-section">
+    <div class="story-content">
+        <div class="story-text">
+            <h2>Our Journey in Healthcare Innovation</h2>
+            <p>Founded in 2020, Doctor Appointment Hub emerged from a simple yet powerful idea: healthcare should be accessible to everyone, regardless of location or circumstance. Our founders, a team of healthcare professionals and technology experts, witnessed firsthand the challenges patients faced in accessing timely medical care.</p>
+            <p>We started with a mission to bridge the gap between patients and healthcare providers through technology. What began as a small startup has grown into a comprehensive platform serving thousands of patients and hundreds of medical professionals across the country.</p>
+            <p>Today, we continue to innovate, constantly improving our platform to meet the evolving needs of modern healthcare while staying true to our core values of compassion, excellence, and accessibility.</p>
+            <a href="{{ url_for('contact') }}" class="btn btn-primary" style="margin-top: 20px;">
+                <i class="fas fa-history"></i> Learn More About Our Journey
+            </a>
+        </div>
+        <div class="story-image">
+            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Our Healthcare Team">
+        </div>
+    </div>
+</section>
+
+<!-- Core Values -->
+<section class="values-section">
+    <h2 class="section-title">Our Core Values</h2>
+    <p class="section-subtitle">The principles that guide everything we do</p>
+    
+    <div class="values-grid">
+        <div class="value-card">
+            <div class="value-icon">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <h3>Patient First</h3>
+            <p>Every decision we make prioritizes patient well-being, safety, and satisfaction above all else.</p>
+        </div>
+        
+        <div class="value-card">
+            <div class="value-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <h3>Excellence</h3>
+            <p>We strive for the highest standards in medical care, technology, and customer service.</p>
+        </div>
+        
+        <div class="value-card">
+            <div class="value-icon">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+            <h3>Innovation</h3>
+            <p>We continuously evolve our platform to incorporate the latest advancements in healthcare technology.</p>
+        </div>
+        
+        <div class="value-card">
+            <div class="value-icon">
+                <i class="fas fa-handshake"></i>
+            </div>
+            <h3>Trust & Transparency</h3>
+            <p>We build relationships based on honesty, clear communication, and mutual respect.</p>
+        </div>
+        
+        <div class="value-card">
+            <div class="value-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3>Collaboration</h3>
+            <p>We work together with patients, doctors, and healthcare providers to achieve the best outcomes.</p>
+        </div>
+        
+        <div class="value-card">
+            <div class="value-icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h3>Compassion</h3>
+            <p>We approach every interaction with empathy, understanding, and genuine care.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics -->
+<section class="stats-section">
+    <h2 class="section-title" style="color: white;">Our Impact in Numbers</h2>
+    <p class="section-subtitle" style="color: rgba(255,255,255,0.8);">Making a difference in healthcare delivery</p>
+    
+    <div class="stats-grid">
+        <div class="stat-item">
+            <div class="stat-number">50,000+</div>
+            <div class="stat-label">Patients Served</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Medical Professionals</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Patient Satisfaction</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Support Available</div>
+        </div>
+    </div>
+</section>
+
+<!-- Achievements -->
+<section class="achievements-section">
+    <h2 class="section-title">Recognition & Achievements</h2>
+    <p class="section-subtitle">Proud milestones in our healthcare journey</p>
+    
+    <div class="achievements-grid">
+        <div class="achievement-card">
+            <div class="achievement-icon">
+                <i class="fas fa-award"></i>
+            </div>
+            <h3>Healthcare Innovation Award 2024</h3>
+            <p>Recognized for outstanding contribution to digital healthcare transformation</p>
+        </div>
+        
+        <div class="achievement-card">
+            <div class="achievement-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>HIPAA Compliant</h3>
+            <p>Fully compliant with healthcare privacy and security regulations</p>
+        </div>
+        
+        <div class="achievement-card">
+            <div class="achievement-icon">
+                <i class="fas fa-handshake"></i>
+            </div>
+            <h3>500+ Partner Clinics</h3>
+            <p>Trusted by healthcare providers across the nation</p>
+        </div>
+        
+        <div class="achievement-card">
+            <div class="achievement-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <h3>4.9/5 Rating</h3>
+            <p>Consistently high ratings from patients and doctors</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h2>Join Us in Transforming Healthcare</h2>
+        <p>Whether you're a patient seeking quality care or a healthcare provider looking to expand your reach, we're here to support your journey.</p>
+        <div class="cta-buttons">
+            <a href="{{ url_for('appointment') }}" class="btn-cta-primary">
+                <i class="fas fa-calendar-plus"></i> Book Your Appointment
+            </a>
+            <a href="{{ url_for('contact') }}" class="btn-cta-secondary">
+                <i class="fas fa-comments"></i> Get In Touch
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

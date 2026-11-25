@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+</head>
+<body>
+
+<h2>User Full Profile</h2>
+
+<p><strong>ID:</strong> {{ user.id }}</p>
+
+<p><strong>First Name:</strong> {{ user.first_name }}</p>
+<p><strong>Last Name:</strong> {{ user.last_name }}</p>
+
+<p><strong>Email:</strong> {{ user.email }}</p>
+<p><strong>Phone:</strong> {{ user.phone }}</p>
+
+<p><strong>Date of Birth:</strong> {{ user.date_of_birth }}</p>
+
+<p><strong>Role:</strong> {{ user.role }}</p>
+
+<p><strong>Created At:</strong> {{ user.created_at }}</p>
+
+<a href="/appointments">
+    <button>Back</button>
+</a>
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Appointment Confirmed{% endblock %}
+{% block content %}
+<section style="max-width:600px;margin:60px auto;text-align:center;">
+  <h2 style="color:#285943;">✅ Appointment Confirmed</h2>
+  <p>Your booking was successful!</p>
+  <p><strong>Transaction ID:</strong> {{ transaction_id }}</p>
+  <a href="{{ url_for('home') }}" style="display:inline-block;margin-top:20px;padding:10px 20px;background:#f5b700;color:#1f3b32;border-radius:6px;text-decoration:none;">Go Home</a>
+</section>
+{% endblock %}

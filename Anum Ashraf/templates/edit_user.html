@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit User – Admin</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+}
+
+.admin-header{
+background:#285943;
+color:#fff;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 2rem;
+height:70px;
+}
+
+.admin-header .logo{
+font-size:1.8rem;
+font-weight:bold;
+}
+
+.header-nav a{
+color:#fff;
+text-decoration:none;
+padding:0.6rem 1rem;
+}
+
+.header-logout a{
+background:#c0392b;
+padding:0.5rem 1.2rem;
+border-radius:30px;
+text-decoration:none;
+color:#fff;
+}
+
+.main{
+padding:2rem;
+max-width:800px;
+margin:auto;
+}
+
+h1{
+color:#285943;
+margin-bottom:20px;
+}
+
+.form-card{
+background:#fff;
+border-radius:20px;
+padding:30px;
+box-shadow:0 8px 20px rgba(0,0,0,0.05);
+}
+
+/* Success Box */
+.success-box{
+background:#d4edda;
+color:#155724;
+padding:20px;
+border-radius:10px;
+font-size:18px;
+text-align:center;
+font-weight:bold;
+}
+
+.form-group{
+margin-bottom:20px;
+}
+
+label{
+font-weight:600;
+color:#285943;
+display:block;
+margin-bottom:6px;
+}
+
+input{
+width:100%;
+padding:10px;
+border:1px solid #ccc;
+border-radius:30px;
+}
+
+.btn{
+background:#285943;
+color:#fff;
+padding:10px 25px;
+border:none;
+border-radius:30px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.btn.cancel{
+background:#7f8c8d;
+text-decoration:none;
+color:#fff;
+padding:10px 25px;
+border-radius:30px;
+}
+
+.btn:hover{
+background:#1f3b32;
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="admin-header">
+
+<div class="logo">
+<i class="fas fa-crown"></i> AdminHub
+</div>
+
+<nav class="header-nav">
+<a href="{{ url_for('admin_dashboard') }}">
+<i class="fas fa-tachometer-alt"></i> Dashboard
+</a>
+</nav>
+
+<div class="header-logout">
+<a href="{{ url_for('logout') }}">
+<i class="fas fa-sign-out-alt"></i> Logout
+</a>
+</div>
+
+</header>
+
+<div class="main">
+
+<h1>
+<i class="fas fa-user-edit"></i> Edit User #{{ user.id }}
+</h1>
+
+<div class="form-card">
+
+{% if success %}
+
+<div class="success-box">
+<i class="fas fa-check-circle"></i>
+User updated successfully
+</div>
+
+<br>
+
+<a href="{{ url_for('admin_dashboard') }}" class="btn">
+Back to Dashboard
+</a>
+
+{% else %}
+
+<form method="POST">
+
+<div class="form-group">
+<label>First Name</label>
+<input type="text" name="first_name" value="{{ user.first_name }}" required>
+</div>
+
+<div class="form-group">
+<label>Last Name</label>
+<input type="text" name="last_name" value="{{ user.last_name }}" required>
+</div>
+
+<div class="form-group">
+<label>Email</label>
+<input type="email" name="email" value="{{ user.email }}" required>
+</div>
+
+<div class="form-group">
+<label>Phone</label>
+<input type="text" name="phone" value="{{ user.phone }}">
+</div>
+
+<div class="form-group">
+<label>Date of Birth</label>
+<input type="date" name="date_of_birth" value="{{ user.date_of_birth }}">
+</div>
+
+<div class="form-group">
+<label>New Password</label>
+<input type="password" name="password" placeholder="Leave blank if not changing">
+</div>
+
+<button type="submit" class="btn">
+<i class="fas fa-save"></i> Save Changes
+</button>
+
+<a href="{{ url_for('admin_dashboard') }}#users" class="btn cancel">
+<i class="fas fa-times"></i> Cancel
+</a>
+
+</form>
+
+{% endif %}
+
+</div>
+</div>
+
+</body>
+</html> 

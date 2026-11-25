@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block title %}My Appointments - Doctor Appointment Hub{% endblock %}
+
+{% block content %}
+<section style="max-width:900px; margin:60px auto; background:white; padding:40px; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+  <h2 style="text-align:center; color:#285943; margin-bottom:30px;">👀 My Appointments</h2>
+
+  <!-- Success Popup Modal -->
+  <div id="successModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+    <div style="background:white; padding:40px; border-radius:12px; text-align:center; max-width:400px; margin:20px; box-shadow:0 5px 20px rgba(0,0,0,0.3);">
+      <div style="font-size:50px; color:#28a745; margin-bottom:15px;">✓</div>
+      <h3 style="color:#285943; margin-bottom:10px;">Success!</h3>
+      <p style="color:#333; margin-bottom:20px;" id="successMessage">Appointment deleted successfully!</p>
+      <button onclick="closeSuccessModal()" style="background:#285943; color:white; border:none; padding:10px 30px; border-radius:6px; cursor:pointer; font-size:16px;">OK</button>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+    <div style="background:white; padding:40px; border-radius:12px; text-align:center; max-width:400px; margin:20px; box-shadow:0 5px 20px rgba(0,0,0,0.3);">
+      <div style="font-size:50px; color:#dc3545; margin-bottom:15px;">⚠️</div>
+      <h3 style="color:#333; margin-bottom:10px;">Confirm Deletion</h3>
+      <p style="color:#555; margin-bottom:20px;">Are you sure you want to cancel this appointment?</p>
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <button onclick="closeDeleteModal()" style="background:#6c757d; color:white; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; font-size:14px;">Cancel</button>
+        <button id="confirmDeleteBtn" style="background:#dc3545; color:white; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; font-size:14px;">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  {% if appointments and appointments|length > 0 %}
+  <div style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse; margin-top:20px;">
+      <thead>
+        <tr style="background:#285943; color:white;">
+          <th style="padding:12px;">ID</th>
+          <th style="padding:12px;">Doctor</th>
+          <th style="padding:12px;">Specialization</th>
+          <th style="padding:12px;">Date</th>
+          <th style="padding:12px;">Time</th>
+          <th style="padding:12px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in appointments %}
+        <tr style="border-bottom:1px solid #ccc;">
+          <td style="padding:12px; text-align:center;">{{ a.id }}</td>
+          <td style="padding:12px;">{{ a.doctor_name }}</td>
+          <td style="padding:12px;">{{ a.specialization }}</td>
+          <td style="padding:12px;">{{ a.appointment_date }}</td>
+          <td style="padding:12px;">{{ a.appointment_time }}</td>
+          <td style="padding:12px; text-align:center; white-space:nowrap;">
+            <a href="{{ url_for('edit_appointment', appointment_id=a.id) }}"
+               style="display:inline-block; background:#f9a826; color:white; padding:6px 12px; border-radius:6px; text-decoration:none; font-weight:600; margin-right:5px;">✏️ Edit</a>
+            <button onclick="showDeleteModal({{ a.id }})"
+               style="display:inline-block; background:#c1121f; color:white; padding:6px 12px; border-radius:6px; text-decoration:none; font-weight:600; border:none; cursor:pointer;">❌ Cancel</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% else %}
+  <p style="text-align:center; font-size:1.1em; color:#555; margin-top:30px;">📋 No appointments found.</p>
+  {% endif %}
+
+  <div style="text-align:center; margin-top:40px;">
+    <a href="{{ url_for('appointment') }}" 
+       style="background:#285943; color:white; padding:12px 24px; border-radius:8px; text-decoration:none; font-weight:600; display:inline-block;">🔁 Book New Appointment</a>
+  </div>
+</section>
+
+<script>
+var appointmentToDelete = null;
+
+// Show delete confirmation modal
+function showDeleteModal(appointmentId) {
+    appointmentToDelete = appointmentId;
+    document.getElementById('deleteModal').style.display = 'flex';
+}
+
+// Close delete modal
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+    appointmentToDelete = null;
+}
+
+// Show success modal
+function showSuccessModal(message) {
+    document.getElementById('successMessage').textContent = message;
+    document.getElementById('successModal').style.display = 'flex';
+    
+    // Auto close after 2 seconds
+    setTimeout(function() {
+        closeSuccessModal();
+    }, 2000);
+}
+
+// Close success modal
+function closeSuccessModal() {
+    document.getElementById('successModal').style.display = 'none';
+    // Reload page after modal closes
+    location.reload();
+}
+
+// Handle delete confirmation
+document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+    if (appointmentToDelete) {
+        // Send delete request via fetch
+        fetch('/cancel-appointment/' + appointmentToDelete, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            closeDeleteModal();
+            if (data.success) {
+                showSuccessModal(data.message);
+            } else {
+                showSuccessModal('Error: ' + data.message);
+            }
+        })
+        .catch(function(error) {
+            closeDeleteModal();
+            showSuccessModal('Error deleting appointment');
+        });
+    }
+});
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    var deleteModal = document.getElementById('deleteModal');
+    var successModal = document.getElementById('successModal');
+    
+    if (event.target === deleteModal) {
+        closeDeleteModal();
+    }
+    if (event.target === successModal) {
+        closeSuccessModal();
+    }
+}
+</script>
+
+<style>
+  @media (max-width: 768px) {
+    section {
+      padding: 20px !important;
+      margin: 20px auto !important;
+    }
+    table {
+      font-size: 14px;
+    }
+    td, th {
+      padding: 8px !important;
+    }
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,814 @@
+{% extends "base.html" %}
+
+{% block title %}Our Services - Doctor Appointment Hub{% endblock %}
+
+{% block content %}
+<style>
+    .services-hero {
+        background: linear-gradient(135deg, var(--forest) 0%, var(--deep-sage) 100%);
+        color: white;
+        padding: 100px 10%;
+        text-align: center;
+    }
+
+    .services-hero h1 {
+        font-size: 3em;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .services-hero p {
+        font-size: 1.2em;
+        max-width: 600px;
+        margin: 0 auto;
+        opacity: 0.9;
+    }
+
+    .services-grid {
+        padding: 80px 10%;
+        background: var(--light-gray);
+    }
+
+    .services-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+
+    .service-card {
+        background: var(--white);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px var(--shadow);
+        transition: all 0.3s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px var(--shadow-dark);
+    }
+
+    .service-icon {
+        height: 120px;
+        background: linear-gradient(135deg, var(--amber) 0%, var(--amber-dark) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3em;
+    }
+
+    .service-content {
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .service-title {
+        font-size: 1.5em;
+        color: var(--forest);
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .service-description {
+        color: #666;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    .service-features {
+        list-style: none;
+        margin-bottom: 25px;
+        flex-grow: 1;
+    }
+
+    .service-features li {
+        padding: 8px 0;
+        color: #555;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .service-features li i {
+        color: var(--amber);
+        font-size: 0.9em;
+    }
+
+    .service-price {
+        font-size: 1.8em;
+        color: var(--forest);
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .service-price span {
+        font-size: 0.6em;
+        color: #666;
+        font-weight: 400;
+    }
+
+    .service-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        margin-bottom: 0;
+    }
+
+    .btn-primary {
+        background: var(--forest);
+        color: white;
+        padding: 12px 20px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-block;
+        flex: 1;
+    }
+
+    .btn-primary:hover {
+        background: var(--deep-sage);
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-secondary {
+        background: var(--amber);
+        color: #222;
+        padding: 12px 20px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-block;
+        flex: 1;
+    }
+
+    .btn-secondary:hover {
+        background: var(--amber-dark);
+        transform: translateY(-2px);
+        color: #222;
+    }
+
+    .specialties-section {
+        padding: 80px 10%;
+        background: var(--white);
+    }
+
+    .specialties-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-top: 50px;
+    }
+
+    .specialty-item {
+        text-align: center;
+        padding: 40px 30px;
+        background: var(--light-gray);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .specialty-item:hover {
+        border-color: var(--amber);
+        transform: translateY(-5px);
+    }
+
+    .specialty-icon {
+        font-size: 3em;
+        color: var(--amber);
+        margin-bottom: 20px;
+    }
+
+    .specialty-name {
+        font-size: 1.3em;
+        color: var(--forest);
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .specialty-desc {
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .process-section {
+        padding: 80px 10%;
+        background: var(--light-gray);
+    }
+
+    .process-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+
+    .process-step {
+        text-align: center;
+        padding: 40px 30px;
+        background: var(--white);
+        border-radius: 12px;
+        position: relative;
+    }
+
+    .step-number {
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 40px;
+        background: var(--amber);
+        color: #222;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.2em;
+    }
+
+    .step-icon {
+        font-size: 2.5em;
+        color: var(--forest);
+        margin-bottom: 20px;
+    }
+
+    .step-title {
+        font-size: 1.3em;
+        color: var(--forest);
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .step-description {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+        background-color: white;
+        margin: 10% auto;
+        padding: 30px;
+        border-radius: 15px;
+        width: 80%;
+        max-width: 600px;
+        position: relative;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+
+    .close-modal {
+        position: absolute;
+        right: 20px;
+        top: 15px;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #666;
+    }
+
+    .close-modal:hover {
+        color: #333;
+    }
+
+    .modal-title {
+        color: var(--forest);
+        margin-bottom: 20px;
+        font-size: 1.8em;
+    }
+
+    .modal-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    .modal-features {
+        margin: 20px 0;
+    }
+
+    .modal-features li {
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .services-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .service-actions {
+            flex-direction: column;
+        }
+        
+        .specialties-grid {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .modal-content {
+            width: 90%;
+            margin: 20% auto;
+            padding: 20px;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="services-hero">
+    <h1>Comprehensive Healthcare Services</h1>
+    <p>From routine checkups to specialized treatments, we provide complete medical care for you and your family.</p>
+</section>
+
+<!-- Main Services Grid -->
+<section class="services-grid">
+    <h2 class="section-title">Our Medical Services</h2>
+    <p class="section-subtitle">Professional healthcare services tailored to your needs</p>
+    
+    <div class="services-container">
+        <!-- General Consultation -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="fas fa-stethoscope"></i>
+            </div>
+            <div class="service-content">
+                <h3 class="service-title">General Consultation</h3>
+                <p class="service-description">
+                    Comprehensive medical evaluation and diagnosis by experienced physicians for all your health concerns.
+                </p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Comprehensive health assessment</li>
+                    <li><i class="fas fa-check"></i> Personalized treatment plans</li>
+                    <li><i class="fas fa-check"></i> Follow-up care included</li>
+                    <li><i class="fas fa-check"></i> 30-45 minute sessions</li>
+                </ul>
+                <div class="service-price">
+                    Rs 2200 - Rs 5000<span>per consultation</span>
+                </div>
+                <div class="service-actions">
+                    <a href="{{ url_for('appointment') }}" class="btn-primary">
+                        <i class="fas fa-calendar-plus"></i> Book Now
+                    </a>
+                    <button class="btn-secondary learn-more" data-service="general">
+                        <i class="fas fa-info-circle"></i> Learn More
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Specialist Consultation -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="fas fa-user-md"></i>
+            </div>
+            <div class="service-content">
+                <h3 class="service-title">Specialist Consultation</h3>
+                <p class="service-description">
+                    Expert care from specialized medical professionals for specific health conditions and treatments.
+                </p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Expert specialist care</li>
+                    <li><i class="fas fa-check"></i> Advanced diagnostics</li>
+                    <li><i class="fas fa-check"></i> Specialized treatment plans</li>
+                    <li><i class="fas fa-check"></i> 45-60 minute sessions</li>
+                </ul>
+                <div class="service-price">
+                    Rs 5000 - Rs 10,000 <span>per consultation</span>
+                </div>
+                <div class="service-actions">
+                    <a href="{{ url_for('appointment') }}" class="btn-primary">
+                        <i class="fas fa-calendar-plus"></i> Book Now
+                    </a>
+                    <button class="btn-secondary learn-more" data-service="specialist">
+                        <i class="fas fa-info-circle"></i> Learn More
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Checkup -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="fas fa-heartbeat"></i>
+            </div>
+            <div class="service-content">
+                <h3 class="service-title">Comprehensive Health Checkup</h3>
+                <p class="service-description">
+                    Complete health assessment including lab tests, physical examination, and preventive care consultation.
+                </p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Complete blood work</li>
+                    <li><i class="fas fa-check"></i> Physical examination</li>
+                    <li><i class="fas fa-check"></i> Diagnostic tests</li>
+                    <li><i class="fas fa-check"></i> Health risk assessment</li>
+                </ul>
+                <div class="service-price">
+                    Rs 5000<span>full package</span>
+                </div>
+                <div class="service-actions">
+                    <a href="{{ url_for('appointment') }}" class="btn-primary">
+                        <i class="fas fa-calendar-plus"></i> Book Now
+                    </a>
+                    <button class="btn-secondary learn-more" data-service="checkup">
+                        <i class="fas fa-info-circle"></i> Learn More
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Therapy Sessions -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <div class="service-content">
+                <h3 class="service-title">Therapy & Counseling</h3>
+                <p class="service-description">
+                    Professional mental health support and therapy sessions with licensed psychologists and counselors.
+                </p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Individual therapy</li>
+                    <li><i class="fas fa-check"></i> Couples counseling</li>
+                    <li><i class="fas fa-check"></i> Stress management</li>
+                    <li><i class="fas fa-check"></i> 50-minute sessions</li>
+                </ul>
+                <div class="service-price">
+                   Rs 3500<span>per session</span>
+                </div>
+                <div class="service-actions">
+                    <a href="{{ url_for('appointment') }}" class="btn-primary">
+                        <i class="fas fa-calendar-plus"></i> Book Now
+                    </a>
+                    <button class="btn-secondary learn-more" data-service="therapy">
+                        <i class="fas fa-info-circle"></i> Learn More
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Care -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="fas fa-ambulance"></i>
+            </div>
+            <div class="service-content">
+                <h3 class="service-title">Emergency Care</h3>
+                <p class="service-description">
+                    Immediate medical attention for urgent health concerns and emergency situations.
+                </p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> 24/7 availability</li>
+                    <li><i class="fas fa-check"></i> Emergency response</li>
+                    <li><i class="fas fa-check"></i> Critical care</li>
+                    <li><i class="fas fa-check"></i> Immediate treatment</li>
+                </ul>
+                <div class="service-price">
+                    Contact <span>for pricing</span>
+                </div>
+                <div class="service-actions">
+                    <a href="tel:911" class="btn-primary">
+                        <i class="fas fa-phone"></i> Call Emergency
+                    </a>
+                    <button class="btn-secondary learn-more" data-service="emergency">
+                        <i class="fas fa-info-circle"></i> Learn More
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Medical Specialties - 16 Specialties -->
+<section class="specialties-section">
+    <h2 class="section-title">Medical Specialties</h2>
+    <p class="section-subtitle">Expert care across all major medical fields</p>
+    
+    <div class="specialties-grid">
+        <div class="specialty-item">
+            <div class="specialty-icon">❤️</div>
+            <h3 class="specialty-name">Cardiology</h3>
+            <p class="specialty-desc">Heart and cardiovascular system care</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">🧠</div>
+            <h3 class="specialty-name">Neurology</h3>
+            <p class="specialty-desc">Brain and nervous system disorders</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">👶</div>
+            <h3 class="specialty-name">Pediatrics</h3>
+            <p class="specialty-desc">Healthcare for children and infants</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">🦴</div>
+            <h3 class="specialty-name">Orthopedics</h3>
+            <p class="specialty-desc">Bone, joint, and muscle care</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">👁️</div>
+            <h3 class="specialty-name">Ophthalmology</h3>
+            <p class="specialty-desc">Eye care and vision health</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">🌬️</div>
+            <h3 class="specialty-name">Pulmonology</h3>
+            <p class="specialty-desc">Lung and respiratory care</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">👨‍⚕️</div>
+            <h3 class="specialty-name">General Physician</h3>
+            <p class="specialty-desc">Primary and family healthcare</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">👂</div>
+            <h3 class="specialty-name">ENT Specialist</h3>
+            <p class="specialty-desc">Ear, nose, and throat care</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">🍽️</div>
+            <h3 class="specialty-name">Gastroenterology</h3>
+            <p class="specialty-desc">Digestive system disorders</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">🎗️</div>
+            <h3 class="specialty-name">Oncology</h3>
+            <p class="specialty-desc">Cancer diagnosis and treatment</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">💧</div>
+            <h3 class="specialty-name">Urology</h3>
+            <p class="specialty-desc">Urinary tract and kidney care</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">⚖️</div>
+            <h3 class="specialty-name">Endocrinology</h3>
+            <p class="specialty-desc">Hormone and metabolic disorders</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">📷</div>
+            <h3 class="specialty-name">Radiology</h3>
+            <p class="specialty-desc">Medical imaging and diagnosis</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">🏃</div>
+            <h3 class="specialty-name">Physiotherapy</h3>
+            <p class="specialty-desc">Physical rehabilitation and therapy</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">🦷</div>
+            <h3 class="specialty-name">Dentistry</h3>
+            <p class="specialty-desc">Oral health and dental care</p>
+        </div>
+        
+        <div class="specialty-item">
+            <div class="specialty-icon">✨</div>
+            <h3 class="specialty-name">Dermatology</h3>
+            <p class="specialty-desc">Skin, hair, and nail care</p>
+        </div>
+    </div>
+</section>
+
+<!-- Process Section -->
+<section class="process-section">
+    <h2 class="section-title">How Our Service Works</h2>
+    <p class="section-subtitle">Simple steps to get the care you need</p>
+    
+    <div class="process-steps">
+        <div class="process-step">
+            <div class="step-number">1</div>
+            <div class="step-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 class="step-title">Find & Choose</h3>
+            <p class="step-description">
+                Browse our network of qualified doctors and choose the right specialist for your needs.
+            </p>
+        </div>
+        
+        <div class="process-step">
+            <div class="step-number">2</div>
+            <div class="step-icon">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <h3 class="step-title">Book Appointment</h3>
+            <p class="step-description">
+                Select your preferred date and time, and confirm your appointment in just a few clicks.
+            </p>
+        </div>
+        
+        <div class="process-step">
+            <div class="step-number">3</div>
+            <div class="step-icon">
+                <i class="fas fa-user-md"></i>
+            </div>
+            <h3 class="step-title">Consult & Treat</h3>
+            <p class="step-description">
+                Meet with your doctor, receive diagnosis, and get personalized treatment recommendations.
+            </p>
+        </div>
+        
+        <div class="process-step">
+            <div class="step-number">4</div>
+            <div class="step-icon">
+                <i class="fas fa-file-medical"></i>
+            </div>
+            <h3 class="step-title">Follow-up Care</h3>
+            <p class="step-description">
+                Receive ongoing support, follow-up appointments, and continuous care management.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Modal for Learn More -->
+<div id="serviceModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title" id="modalServiceTitle">Service Title</h2>
+        <p class="modal-description" id="modalServiceDescription">Service description will appear here.</p>
+        <div class="modal-features" id="modalServiceFeatures">
+            <!-- Features will be added here dynamically -->
+        </div>
+        <div class="service-actions">
+            <a href="{{ url_for('appointment') }}" class="btn-primary" style="padding: 12px 20px; text-decoration: none; display: inline-block; border-radius: 8px;">
+                <i class="fas fa-calendar-plus"></i> Book Appointment
+            </a>
+            <button class="btn-secondary close-modal-btn" style="padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer;">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Service details data
+        const serviceDetails = {
+            'general': {
+                title: 'General Consultation',
+                description: 'Our general consultation service provides comprehensive medical evaluation and diagnosis by experienced physicians. This service is perfect for routine checkups, initial assessments of health concerns, and ongoing management of chronic conditions.',
+                features: [
+                    'Comprehensive health assessment and physical examination',
+                    'Personalized treatment plans tailored to your specific needs',
+                    'Follow-up care and progress monitoring included',
+                    '30-45 minute dedicated sessions with your physician',
+                    'Referrals to specialists when needed',
+                    'Prescription management and medication reviews'
+                ]
+            },
+            'specialist': {
+                title: 'Specialist Consultation',
+                description: 'Access expert care from specialized medical professionals for specific health conditions and advanced treatments. Our specialists are leaders in their fields and provide the highest quality of specialized medical care.',
+                features: [
+                    'Expert care from board-certified specialists',
+                    'Advanced diagnostics and specialized testing',
+                    'Comprehensive treatment plans for complex conditions',
+                    '45-60 minute in-depth consultation sessions',
+                    'Coordination with your primary care physician',
+                    'Access to latest treatment technologies and methods'
+                ]
+            },
+            'checkup': {
+                title: 'Comprehensive Health Checkup',
+                description: 'Our comprehensive health checkup provides a complete assessment of your overall health status. This package includes extensive lab tests, physical examination, and preventive care consultation to help you maintain optimal health.',
+                features: [
+                    'Complete blood work and laboratory testing',
+                    'Thorough physical examination by experienced physicians',
+                    'Advanced diagnostic tests and screenings',
+                    'Comprehensive health risk assessment',
+                    'Personalized preventive care recommendations',
+                    'Detailed health report with actionable insights'
+                ]
+            },
+            'therapy': {
+                title: 'Therapy & Counseling',
+                description: 'Receive professional mental health support and therapy sessions with licensed psychologists and counselors. Our mental health services are designed to help you achieve emotional well-being and personal growth.',
+                features: [
+                    'Individual therapy sessions for personal challenges',
+                    'Couples counseling for relationship improvement',
+                    'Stress management and coping strategies',
+                    '50-minute dedicated therapy sessions',
+                    'Evidence-based therapeutic approaches',
+                    'Confidential and supportive environment'
+                ]
+            },
+            'emergency': {
+                title: 'Emergency Care',
+                description: 'Our emergency care service provides immediate medical attention for urgent health concerns and emergency situations. We are equipped to handle critical medical conditions with prompt and effective care.',
+                features: [
+                    '24/7 availability for urgent medical needs',
+                    'Rapid emergency response and triage',
+                    'Critical care and stabilization services',
+                    'Immediate treatment for acute conditions',
+                    'Coordination with emergency transport when needed',
+                    'Follow-up care planning after emergency treatment'
+                ]
+            }
+        };
+
+        // Get modal elements
+        const modal = document.getElementById('serviceModal');
+        const modalTitle = document.getElementById('modalServiceTitle');
+        const modalDescription = document.getElementById('modalServiceDescription');
+        const modalFeatures = document.getElementById('modalServiceFeatures');
+        const closeModal = document.querySelector('.close-modal');
+        const closeModalBtn = document.querySelector('.close-modal-btn');
+
+        // Learn more buttons functionality
+        const learnMoreButtons = document.querySelectorAll('.learn-more');
+        
+        learnMoreButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const serviceType = this.getAttribute('data-service');
+                const service = serviceDetails[serviceType];
+                
+                if (service) {
+                    modalTitle.textContent = service.title;
+                    modalDescription.textContent = service.description;
+                    modalFeatures.innerHTML = '';
+                    
+                    service.features.forEach(feature => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<i class="fas fa-check" style="color: var(--amber);"></i> ${feature}`;
+                        modalFeatures.appendChild(li);
+                    });
+                    
+                    modal.style.display = 'block';
+                }
+            });
+        });
+
+        // Close modal functionality
+        if (closeModal) {
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+        }
+
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+        }
+
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                modal.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

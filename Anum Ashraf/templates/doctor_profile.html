@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Profile</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            margin:0;
+            background: linear-gradient(135deg,#dce6dc,#b7c9b5);
+        }
+
+        .box{
+            width:520px;
+            margin:50px auto;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(10px);
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.15);
+            border:1px solid #a3b18a;
+        }
+
+        h2{
+            text-align:center;
+            color:#3a5a40;
+            margin-bottom:20px;
+        }
+
+        p{
+            color:#2f4f34;
+            font-size:15px;
+            margin:6px 0;
+        }
+
+        /* BUTTONS */
+        button{
+            padding:10px;
+            background:#3a5a40;
+            color:white;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            margin-top:15px;
+            width:100%;
+            font-weight:bold;
+            transition:0.3s;
+        }
+
+        button:hover{
+            background:#2f4f34;
+        }
+
+        .back-btn{
+            display:block;
+            text-align:center;
+            margin-top:10px;
+            text-decoration:none;
+            color:#3a5a40;
+            font-weight:bold;
+        }
+
+        .back-btn:hover{
+            text-decoration:underline;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h2>My Profile</h2>
+
+    <p><b>ID:</b> {{ doctor.id }}</p>
+    <p><b>Name:</b> {{ doctor.name }}</p>
+    <p><b>Email:</b> {{ doctor.email }}</p>
+    <p><b>Specialization:</b> {{ doctor.specialization }}</p>
+    <p><b>Experience:</b> {{ doctor.experience }}</p>
+    <p><b>Education:</b> {{ doctor.education }}</p>
+    <p><b>City:</b> {{ doctor.city }}</p>
+    <p><b>Rating:</b> {{ doctor.rating }}</p>
+
+    <!-- EDIT BUTTON -->
+    <a href="{{ url_for('doctor_profile_edit') }}">
+        <button>Edit Profile</button>
+    </a>
+
+    <!-- BACK BUTTON -->
+    <a href="/doctor-dashboard" class="back-btn">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>

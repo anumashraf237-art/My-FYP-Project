@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Doctor Appointment Hub{% endblock %}</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --deep-sage: #1f3b32;
+      --forest: #285943;
+      --amber: #f5b700;
+      --amber-dark: #d49d00;
+      --white: #ffffff;
+      --gray: #f4f6f5;
+      --shadow: rgba(0,0,0,0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--gray);
+      color: var(--deep-sage);
+    }
+
+    header {
+      background: var(--white);
+      box-shadow: 0 4px 15px var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .site-title {
+      font-size: 1.6em;
+      font-weight: 700;
+      color: var(--forest);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--deep-sage);
+      font-weight: 500;
+    }
+
+    .auth-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-nav {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.9em;
+      text-decoration: none;
+    }
+
+    .btn-nav-primary {
+      background: var(--amber);
+      color: #222;
+    }
+
+    .btn-nav-secondary {
+      border: 2px solid var(--forest);
+      color: var(--forest);
+    }
+
+    /* ✅ Avatar */
+    .user-menu {
+      position: relative;
+    }
+
+    .avatar {
+      padding: 8px 15px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #285943, #1f3b32);
+      color: white;
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ✅ Dropdown */
+    .dropdown-menu {
+      position: absolute;
+      right: 0;
+      top: 45px;
+      background: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      display: none;
+      flex-direction: column;
+      min-width: 150px;
+      overflow: hidden;
+    }
+
+    .dropdown-menu a {
+      padding: 10px;
+      text-decoration: none;
+      color: #1f3b32;
+      font-size: 0.9em;
+    }
+
+    .dropdown-menu a:hover {
+      background: #f4f6f5;
+    }
+
+    main {
+      padding: 40px 20px;
+      min-height: 80vh;
+    }
+  </style>
+</head>
+
+<body>
+
+{% if request.endpoint != 'login' %}
+<header>
+  <div class="header-container">
+
+    <h1 class="site-title">
+      <i class="fas fa-stethoscope"></i> Doctor Appointment Hub
+    </h1>
+
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('doctors') }}">Our Doctors</a></li>
+        <li><a href="{{ url_for('services') }}">Services</a></li>
+        <li><a href="{{ url_for('about') }}">About</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="auth-nav">
+
+      {% if session.get('user_id') %}
+
+      <!-- ✅ USER AVATAR WITH DROPDOWN -->
+      <div class="user-menu">
+        <div class="avatar" onclick="toggleMenu()">
+          {{ (session.get('first_name')[0] if session.get('first_name') else '') | upper }}
+          {{ (session.get('last_name')[0] if session.get('last_name') else '') | upper }}
+          <i class="fas fa-caret-down"></i>
+        </div>
+
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a href="{{ url_for('edit_profile') }}">Edit Profile</a>
+          <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+      </div>
+
+      {% else %}
+
+      <a href="{{ url_for('login') }}" class="btn-nav btn-nav-secondary">Login</a>
+      <a href="{{ url_for('signup') }}" class="btn-nav btn-nav-primary">Sign Up</a>
+
+      {% endif %}
+
+    </div>
+  </div>
+</header>
+{% endif %}
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<script>
+function toggleMenu() {
+  var menu = document.getElementById("dropdownMenu");
+  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Info</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            background: linear-gradient(135deg,#dce6dc,#b7c9b5);
+            margin:0;
+        }
+
+        .container{
+            padding:20px;
+        }
+
+        h2{
+            text-align:center;
+            color:#3a5a40;
+        }
+
+        /* TABLE */
+        table{
+            width:100%;
+            border-collapse:collapse;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(10px);
+            margin-top:20px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.1);
+            border-radius:10px;
+            overflow:hidden;
+        }
+
+        th, td{
+            padding:12px;
+            border:1px solid #a3b18a;
+            text-align:center;
+            color:#2f4f34;
+        }
+
+        th{
+            background:#3a5a40;
+            color:white;
+        }
+
+        tr:hover{
+            background:#e9f0e9;
+        }
+
+        /* BACK BUTTON */
+        .back-btn{
+            display:inline-block;
+            margin-top:20px;
+            padding:10px 15px;
+            background:#3a5a40;
+            color:white;
+            text-decoration:none;
+            border-radius:8px;
+            font-weight:bold;
+            transition:0.3s;
+        }
+
+        .back-btn:hover{
+            background:#2f4f34;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Users (Booked Appointments)</h2>
+
+    {% if users %}
+
+    <table>
+
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Date of Birth</th>
+            <th>Role</th>
+            <th>Created At</th>
+        </tr>
+
+        {% for u in users %}
+        <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.first_name }}</td>
+            <td>{{ u.last_name }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.phone }}</td>
+            <td>{{ u.date_of_birth }}</td>
+            <td>{{ u.role }}</td>
+            <td>{{ u.created_at }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+        <p>No users found.</p>
+    {% endif %}
+
+    <!-- BACK BUTTON -->
+    <a href="/doctor-dashboard" class="back-btn">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>

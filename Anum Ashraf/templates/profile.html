@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile - Doctor Appointment Hub</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6f5;
+      color: #285943;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .profile-container {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      width: 100%;
+      max-width: 500px;
+      overflow: hidden;
+    }
+    
+    .profile-header {
+      background: #285943;
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .profile-icon {
+      width: 80px;
+      height: 80px;
+      background: #f5b700;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+      font-size: 30px;
+    }
+    
+    .profile-name {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .profile-email {
+      opacity: 0.9;
+      font-size: 16px;
+    }
+    
+    .profile-content {
+      padding: 30px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #285943;
+      border-bottom: 2px solid #f5b700;
+      padding-bottom: 8px;
+    }
+    
+    .info-group {
+      margin-bottom: 25px;
+    }
+    
+    .info-label {
+      font-weight: 500;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    
+    .info-value {
+      font-size: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .password-field {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .password-mask {
+      letter-spacing: 2px;
+      font-family: monospace;
+    }
+    
+    .show-password {
+      background: none;
+      border: none;
+      color: #285943;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    
+    .show-password:hover {
+      background: #f0f0f0;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .btn {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.3s;
+      text-align: center;
+      flex: 1;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+    }
+    
+    .btn-primary {
+      background: #f5b700;
+      color: #285943;
+    }
+    
+    .btn-primary:hover {
+      background: #d49d00;
+      color: white;
+    }
+    
+    .btn-secondary {
+      background: #285943;
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background: #1e4535;
+    }
+    
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+    
+    .nav-item {
+      color: #285943;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+    }
+    
+    .nav-item:hover {
+      text-decoration: underline;
+    }
+    
+    .logout {
+      color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-container">
+    <div class="profile-header">
+      <div class="profile-icon">
+        <i class="fas fa-user"></i>
+      </div>
+      <h1 class="profile-name">{{ user.user_name if user.user_name else user.first_name + ' ' + user.last_name }}</h1>
+      <p class="profile-email">{{ user.user_email if user.user_email else user.email }}</p>
+    </div>
+    
+    <div class="profile-content">
+      <h2 class="section-title">Account Details</h2>
+      
+      <div class="info-group">
+        <div class="info-label">Full Name</div>
+        <div class="info-value">{{ user.user_name if user.user_name else user.first_name + ' ' + user.last_name }}</div>
+      </div>
+      
+      <div class="info-group">
+        <div class="info-label">Email</div>
+        <div class="info-value">{{ user.user_email if user.user_email else user.email }}</div>
+      </div>
+      
+      <div class="info-group">
+        <div class="info-label">Password</div>
+        <div class="info-value password-field">
+          <span class="password-mask" id="passwordDisplay">••••••••</span>
+          <button type="button" class="show-password" onclick="togglePassword()">
+            <i class="fas fa-eye"></i> Show
+          </button>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <a href="{{ url_for('edit_profile') }}" class="btn btn-primary">
+          <i class="fas fa-edit"></i> Edit Profile
+        </a>
+
+      </div>
+      
+      <div class="navigation">
+        <a href="{{ url_for('logout') }}" class="nav-item logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function togglePassword() {
+      const passwordDisplay = document.getElementById('passwordDisplay');
+      const button = document.querySelector('.show-password');
+      
+      if (passwordDisplay.textContent === '••••••••') {
+        passwordDisplay.textContent = 'password123'; // This would be a placeholder
+        button.innerHTML = '<i class="fas fa-eye-slash"></i> Hide';
+      } else {
+        passwordDisplay.textContent = '••••••••';
+        button.innerHTML = '<i class="fas fa-eye"></i> Show';
+      }
+    }
+  </script>
+</body>
+</html>

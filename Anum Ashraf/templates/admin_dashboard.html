@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AdminHub · Dashboard Switcher</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f7fc;
+      color: #1e2f2d;
+    }
+
+    .app-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: #1a5d2c;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 4px 0 12px rgba(0,0,0,0.06);
+    }
+
+    .sidebar-header {
+      padding: 1.8rem 1.5rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+      border-bottom: 1px solid #2e7d4e;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-header i {
+      color: #f0ad4e;
+      font-size: 1.9rem;
+    }
+
+    .nav-section {
+      flex: 1;
+      padding: 1.5rem 0.8rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0.9rem 1.2rem;
+      margin: 6px 0;
+      border-radius: 40px;
+      color: #e0f0e3;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nav-item i {
+      width: 24px;
+      font-size: 1.2rem;
+    }
+
+    .nav-item:hover {
+      background: #2d8a4c;
+      color: white;
+    }
+
+    .nav-item.active {
+      background: #ffffff22;
+      color: white;
+      font-weight: 600;
+    }
+
+    .logout-area {
+      padding: 1.5rem 1.2rem 2rem;
+      border-top: 1px solid #2a7845;
+    }
+
+    .logout-btn {
+      background: #c0392b;
+      color: white;
+      border-radius: 40px;
+      padding: 0.8rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .logout-btn:hover {
+      background: #a93226;
+    }
+
+    .main-panel {
+      flex: 1;
+      background: #f9fbfd;
+      padding: 2rem 2.5rem;
+      overflow-y: auto;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .panel-header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #1a5d2c;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .admin-badge {
+      background: #e9f3ec;
+      padding: 0.4rem 1.4rem;
+      border-radius: 40px;
+      color: #1a5d2c;
+      font-weight: 600;
+    }
+
+    /* Stats Cards */
+    .stat-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 24px;
+      box-shadow: 0 6px 18px rgba(0, 20, 0, 0.04);
+      border: 1px solid #dfe8e2;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card h3 {
+      color: #2d5a3f;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card .number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #0f2c1b;
+    }
+
+    .stat-card .trend {
+      font-size: 0.8rem;
+      margin-top: 8px;
+      color: #27ae60;
+    }
+
+    /* Recent Activity Section */
+    .recent-section {
+      background: white;
+      border-radius: 24px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid #dfe8e2;
+    }
+
+    .recent-section h3 {
+      color: #1a5d2c;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+    }
+
+    .activity-list {
+      list-style: none;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 12px 0;
+      border-bottom: 1px solid #eef3ef;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .activity-icon.user {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .activity-icon.doctor {
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+
+    .activity-icon.appointment {
+      background: #fff3e0;
+      color: #ef6c00;
+    }
+
+    .activity-detail {
+      flex: 1;
+    }
+
+    .activity-title {
+      font-weight: 600;
+      color: #1e2f2d;
+    }
+
+    .activity-time {
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    /* Quick Actions Row */
+    .quick-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .dashboard-panel {
+      display: none;
+    }
+
+    .dashboard-panel.active-panel {
+      display: block;
+    }
+
+    .search-box {
+      margin-bottom: 1.5rem;
+    }
+
+    .search-box input {
+      width: 100%;
+      max-width: 400px;
+      padding: 0.8rem 1.5rem;
+      border-radius: 50px;
+      border: 1px solid #cbd5e0;
+      background: white;
+    }
+
+    .table-wrapper {
+      background: white;
+      border-radius: 20px;
+      padding: 0.2rem 0;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.04);
+      overflow-x: auto;
+      margin-bottom: 2.5rem;
+      border: 1px solid #e2e9e5;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1000px;
+    }
+
+    th {
+      text-align: left;
+      padding: 1.2rem 1.2rem;
+      background: #f0f7f2;
+      color: #1a5d2c;
+      font-weight: 600;
+      border-bottom: 2px solid #c7ddce;
+    }
+
+    td {
+      padding: 1.1rem 1.2rem;
+      border-bottom: 1px solid #eef3ef;
+      color: #1e3a2a;
+    }
+
+    .doctor-img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .status-badge {
+      background: #2ecc71;
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      display: inline-block;
+    }
+
+    .btn-delete {
+      color: #e74c3c;
+      background: none;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-edit {
+      color: #2980b9;
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+
+    .action-bar {
+      margin: 20px 0 10px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: #1a5d2c;
+      color: white;
+      padding: 0.7rem 1.8rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #2d8a4c;
+      transform: scale(1.02);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #1a5d2c;
+      color: #1a5d2c;
+    }
+
+    .btn-outline:hover {
+      background: #1a5d2c;
+      color: white;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      width: 550px;
+      margin: 60px auto;
+      padding: 30px;
+      border-radius: 20px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .modal-content h3 {
+      margin-bottom: 20px;
+      color: #1a5d2c;
+    }
+
+    .modal-content input, .modal-content select, .modal-content textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    /* Toast Notification */
+    .toast-notification {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 350px;
+      max-width: 500px;
+      padding: 1.2rem 2rem;
+      border-radius: 16px;
+      font-weight: 600;
+      text-align: center;
+      z-index: 9999;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      animation: slideIn 0.3s ease-out;
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .toast-notification.success {
+      background: linear-gradient(135deg, #1a5d2c, #2d8a4c);
+      color: white;
+      border-left: 6px solid #f0ad4e;
+    }
+
+    .toast-notification.error {
+      background: linear-gradient(135deg, #c0392b, #e74c3c);
+      color: white;
+      border-left: 6px solid #f39c12;
+    }
+
+    .toast-notification i {
+      font-size: 1.8rem;
+    }
+
+    .toast-notification .close-toast {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+    }
+
+    .back-to-top {
+      text-align: right;
+      margin-top: 1rem;
+    }
+
+    .welcome-banner {
+      background: linear-gradient(135deg, #1a5d2c, #2d8a4c);
+      border-radius: 24px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .welcome-banner h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .welcome-banner p {
+      opacity: 0.9;
+    }
+
+    .date-time {
+      text-align: right;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 800px) {
+      .app-wrapper {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+      }
+      .main-panel {
+        padding: 1.5rem;
+      }
+      .modal-content {
+        width: 95%;
+      }
+      .toast-notification {
+        min-width: 280px;
+        width: 90%;
+      }
+      .welcome-banner {
+        flex-direction: column;
+        text-align: center;
+      }
+      .date-time {
+        text-align: center;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <i class="fas fa-crown"></i>
+      <span>AdminHub</span>
+    </div>
+    <div class="nav-section">
+      <div class="nav-item active" data-panel="overview">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Overview</span>
+      </div>
+      <div class="nav-item" data-panel="usersDashboard">
+        <i class="fas fa-users"></i>
+        <span>Users Dashboard</span>
+      </div>
+      <div class="nav-item" data-panel="appointmentsDashboard">
+        <i class="fas fa-calendar-check"></i>
+        <span>Appointments</span>
+      </div>
+      <div class="nav-item" data-panel="doctorsDashboard">
+        <i class="fas fa-user-md"></i>
+        <span>Doctors</span>
+      </div>
+      <div style="margin-top:30px; border-top:1px dashed #3a8853; padding-top:20px;">
+        <div class="nav-item" data-panel="ratingsDashboard">
+    <i class="fas fa-star"></i>
+    <span>View Ratings</span>
+        </div>
+         <div class="nav-item" data-panel="messagesDashboard">
+          <i class="fas fa-envelope"></i>
+            <span>Contact Messages</span>
+           </div>
+          <div class="nav-item" data-panel="paymentsDashboard">
+          <i class="fas fa-credit-card"></i>
+            <span>Payments</span>
+          </div> 
+        <div class="nav-item" data-panel="notificationsDashboard">
+     <i class="fas fa-bell"></i>
+     <span>Notifications</span>
+     </div>
+      </div>
+    </div>
+    <div class="logout-area">
+      <a href="{{ url_for('logout') }}" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </div>
+
+  <div class="main-panel">
+    
+    <!-- Overview Panel - ENHANCED -->
+    <div id="overviewPanel" class="dashboard-panel active-panel">
+      
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div>
+          <h2>Welcome back, {{ session.get('admin_name', 'Admin') }}! 👋</h2>
+          <p>Here's what's happening with your platform today.</p>
+        </div>
+        <div class="date-time">
+          <i class="fas fa-calendar-alt"></i> 
+          <span id="currentDate"></span>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stat-cards">
+        <div class="stat-card">
+          <h3><i class="fas fa-users"></i> Total Users</h3>
+          <div class="number">{{ users|length }}</div>
+          </div>
+        <div class="stat-card">
+          <h3><i class="fas fa-calendar-check"></i> Appointments</h3>
+          <div class="number">{{ appointments|length }}</div>
+        </div>
+        <div class="stat-card">
+          <h3><i class="fas fa-user-md"></i> Doctors</h3>
+          <div class="number">{{ doctors|length }}</div>
+        </div>
+        <div class="stat-card">
+          <h3><i class="fas fa-star"></i> Avg Rating</h3>
+          <div class="number">4.8 ⭐</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <button class="btn-primary" onclick="openAddDoctorModal()">
+          <i class="fas fa-user-md"></i> Add New Doctor
+        </button>
+        <a href="{{ url_for('appointment') }}" class="btn-primary">
+          <i class="fas fa-calendar-plus"></i> Schedule Appointment
+        </a>
+        <button class="btn-primary btn-outline" onclick="openAddUserModal()">
+          <i class="fas fa-user-plus"></i> Add New User
+        </button>
+      </div>
+
+      <!-- Top Doctors Section -->
+      <div class="recent-section">
+        <h3><i class="fas fa-trophy"></i> Top Rated Doctors</h3>
+        <div class="table-wrapper" style="margin-bottom: 0;">
+          <table style="min-width: 500px;">
+            <thead>
+              <tr><th>Doctor</th><th>Specialization</th><th>Rating</th><th>City</th></tr>
+            </thead>
+            <tbody>
+              {% set top_doctors = doctors|sort(attribute='rating', reverse=True)|list %}
+              {% for doc in top_doctors[:5] %}
+              <tr>
+                <td><strong>{{ doc.name }}</strong></td>
+                <td>{{ doc.specialization }}</td>
+                <td>{{ doc.rating }} ⭐</td>
+                <td>{{ doc.city }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+   <div id="notificationsDashboardPanel" class="dashboard-panel">
+  <div class="panel-header">
+    <h1><i class="fas fa-bell"></i> Notifications</h1>
+    <span class="admin-badge">{{ notifications|length }} alerts</span>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Notification Id</th>
+          <th>Appointment Id</th>
+          <th>User Email</th>
+          <th>Type</th>
+          <th>Subject</th>
+          <th>Message</th>
+          <th>Status</th>
+          <th>Sent At</th>
+
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for n in notifications %}
+        <tr>
+          <td>{{ n.notification_id }}</td>
+          <td>{{ n.appointment_id }}</td>
+          <td>{{ n.user_email}}</td>
+          <td>{{ n.type }}</td>
+          <td>{{ n.subject }}</td>
+          <td>{{ n.message}}</td>
+          <td>{{ n.status }}</td>
+          <td>{{ n.sent_at }}</td>
+
+
+
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+    <!-- Users Dashboard Panel -->
+    <div id="usersDashboardPanel" class="dashboard-panel">
+      <div class="panel-header">
+        <h1><i class="fas fa-users"></i> Users Management</h1>
+        <span class="admin-badge">{{ users|length }} registered</span>
+      </div>
+      <div class="action-bar">
+        <button class="btn-primary" onclick="openAddUserModal()">
+          <i class="fas fa-user-plus"></i> Add New User
+        </button>
+      </div>
+      <div class="search-box">
+        <input type="text" id="userSearchInput" placeholder="🔍 Search by name, email, phone...">
+      </div>
+      <div class="table-wrapper">
+        <table id="usersTable">
+          <thead>
+            <tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+            <tr>
+              <td>{{ user.id }}</td>
+              <td>{{ user.first_name }} {{ user.last_name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.phone }}</td>
+              <td>
+                <form method="POST" action="{{ url_for('delete_user', user_id=user.id) }}" style="display:inline;" onsubmit="return confirm('Delete this user?');">
+                  <button class="btn-delete" type="submit">Delete</button>
+                </form>
+                <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn-edit">Edit</a>
+               </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="back-to-top"><a href="#" onclick="scrollToTop();">back to top</a></div>
+    </div>
+
+    <!-- Appointments Panel -->
+    <div id="appointmentsDashboardPanel" class="dashboard-panel">
+      <div class="panel-header">
+        <h1><i class="fas fa-calendar-check"></i> Appointments</h1>
+        <span class="admin-badge">{{ appointments|length }} total</span>
+      </div>
+      <div class="search-box">
+        <input type="text" id="apptSearchInput" placeholder="🔍 Search by patient, doctor, date...">
+      </div>
+      <div class="table-wrapper">
+        <table id="appointmentsTable">
+          <thead>
+            <tr><th>ID</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Specialization</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            {% for appt in appointments %}
+            <tr>
+              <td>{{ appt.id }}</td>
+              <td>{{ appt.patient_name }}</td>
+              <td>{{ appt.doctor_name }}</td>
+              <td>{{ appt.appointment_date }}</td>
+              <td>{{ appt.specialization }}</td>
+              <td><span class="status-badge">Confirmed</span></td>
+              <td>
+                <form method="POST" action="{{ url_for('delete_appointment', appointment_id=appt.id) }}" style="display:inline;" onsubmit="return confirm('Delete appointment?');">
+                  <button class="btn-delete" type="submit">Delete</button>
+                </form>
+                <a href="{{ url_for('edit_appointment', appointment_id=appt.id) }}" class="btn-edit">Edit</a>
+               </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="ratingsDashboardPanel" class="dashboard-panel">
+  <div class="panel-header">
+    <h1><i class="fas fa-star"></i> Ratings & Feedback</h1>
+    <span class="admin-badge">{{ ratings|length }} reviews</span>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User ID</th>
+          <th>Rating</th>
+          <th>Feedback</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for r in ratings %}
+        <tr>
+          <td>{{ r.id }}</td>
+          <td>{{ r.user_id }}</td>
+          <td>⭐ {{ r.rating }}</td>
+          <td>{{ r.feedback }}</td>
+          <td>{{ r.created_at }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+           
+         <!-- Messages Dashboard Panel -->
+<div id="messagesDashboardPanel" class="dashboard-panel">
+  <div class="panel-header">
+    <h1><i class="fas fa-envelope"></i> Contact Messages</h1>
+    <span class="admin-badge">{{ messages|length }} messages</span>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Subject</th>
+          <th>Department</th>
+          <th>Message</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for msg in messages %}
+        <tr>
+          <td>{{ msg.id }}</td>
+          <td>{{ msg.user_id if msg.user_id else 'Guest' }}</td>
+          <td>{{ msg.name }}</td>
+          <td>{{ msg.email }}</td>
+          <td>{{ msg.phone }}</td>
+          <td>{{ msg.subject }}</td>
+          <td>{{ msg.department }}</td>
+          <td>{{ msg.message[:40] }}...</td>
+          <td>{{ msg.created_at }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+   
+<div id="paymentsDashboardPanel" class="dashboard-panel">
+
+  <div class="panel-header">
+    <h1><i class="fas fa-credit-card"></i> Payments</h1>
+    <span class="admin-badge">{{ payments|length }} payments</span>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Appointment ID</th>
+          <th>Payment Type</th>
+          <th>Method</th>
+          <th>Card Number </th>
+          <th>Expiry Date</th>
+          <th>cvv</th>
+          <th>Card Holder Name</th>
+          <th>Wallet provider</th>
+          <th>Bank Name</th>
+          <th>Transaction Id</th>
+          <th>Amount</th>
+          <th>Payment Status</th>
+          <th>Created At </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for p in payments %}
+        <tr>
+          <td>{{ p.payment_id }}</td>
+          <td>{{ p.appointment_id }}</td>
+          <td>{{ p.payment_type}}</td>
+          <td>{{ p.payment_method }}</td>
+          <td>{{ p.card_number }}</td>
+          <td>{{ p.expiry_date }}</td>
+          <td>{{ p.cvv }}</td>
+          <td>{{ p.cardholder_name }}</td>
+          <td>{{ p.waller_provider }}</td>
+          <td>{{ p.bank_name }}</td>
+          <td>{{ p.transaction_id }}</td>
+          <td>{{ p.amount }}</td>
+          <td>{{ p.payment_status }}</td>
+          <td>{{ p.created_at}}</td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+    <!-- Doctors Dashboard Panel -->
+    <div id="doctorsDashboardPanel" class="dashboard-panel">
+      <div class="panel-header">
+        <h1><i class="fas fa-user-md"></i> Doctors Directory</h1>
+        <span class="admin-badge">{{ doctors|length }} doctors</span>
+      </div>
+      <div class="action-bar">
+        <button class="btn-primary" onclick="openAddDoctorModal()">
+          <i class="fas fa-plus-circle"></i> Add New Doctor
+        </button>
+      </div>
+      <div class="search-box">
+        <input type="text" id="docSearchInput" placeholder="🔍 Search by name or specialization">
+      </div>
+      <div class="table-wrapper">
+        <table id="doctorsTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Specialization</th>
+              <th>Experience</th>
+              <th>Education</th>
+              <th>City</th>
+              <th>Rating</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for doc in doctors %}
+            <tr>
+              <td>{{ doc.id }}</td>
+              <td>
+                {% if doc.image_url %}
+                  <img src="{{ doc.image_url }}" class="doctor-img" alt="{{ doc.name }}">
+                {% else %}
+                  <i class="fas fa-user-md" style="font-size: 30px; color: #1a5d2c;"></i>
+                {% endif %}
+              </td>
+              <td>{{ doc.name }}</td>
+              <td>{{ doc.specialization }}</td>
+              <td>{{ doc.experience }}</td>
+              <td>{{ doc.education }}</td>
+              <td>{{ doc.city }}</td>
+              <td>{{ doc.rating }} ⭐</td>
+              <td>
+                <form method="POST" action="{{ url_for('delete_doctor', doctor_id=doc.id) }}" style="display:inline;" onsubmit="return confirm('Delete this doctor?');">
+                  <button class="btn-delete" type="submit">Delete</button>
+                </form>
+                <a href="{{ url_for('edit_doctor', doctor_id=doc.id) }}" class="btn-edit">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add User Modal -->
+<div id="addUserModal" class="modal">
+  <div class="modal-content">
+    <h3><i class="fas fa-user-plus"></i> Add New User</h3>
+    <form method="POST" action="{{ url_for('add_user') }}" onsubmit="return false;" id="addUserForm">
+      <input type="text" name="first_name" placeholder="First Name" required>
+      <input type="text" name="last_name" placeholder="Last Name" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="text" name="phone" placeholder="Phone" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+      <input type="date" name="date_of_birth" required>
+      <button type="submit" class="btn-primary" style="width:100%;">Create User</button>
+      <button type="button" onclick="closeModal('addUserModal')" style="width:100%; margin-top:10px; padding:10px; background:#ccc; border:none; border-radius:40px; cursor:pointer;">Cancel</button>
+    </form>
+  </div>
+  div id="messagesDashboardPanel" class="dashboard-panel">
+  <div class="panel-header">
+    <h1><i class="fas fa-envelope"></i> Contact Messages</h1>
+    <span class="admin-badge">{{ messages|length }} messages</span>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Subject</th>
+          <th>Department</th>
+          <th>Message</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for msg in messages %}
+        <tr>
+          <td>{{ msg.id }}</td>
+          <td>{{ msg.user_id if msg.user_id else 'Guest' }}</td>
+          <td>{{ msg.name }}</td>
+          <td>{{ msg.email }}</td>
+          <td>{{ msg.phone }}</td>
+          <td>{{ msg.subject }}</td>
+          <td>{{ msg.department }}</td>
+          <td>{{ msg.message[:40] }}...</td>
+          <td>{{ msg.created_at }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<!-- Add Doctor Modal -->
+<div id="addDoctorModal" class="modal">
+  <div class="modal-content">
+    <h3><i class="fas fa-user-md"></i> Add New Doctor</h3>
+    <form method="POST" action="{{ url_for('add_doctor') }}" onsubmit="return false;" id="addDoctorForm">
+      <input type="text" name="name" placeholder="Doctor Name" required>
+      <input type="text" name="specialization" placeholder="Specialization" required>
+      <input type="text" name="experience" placeholder="Experience (e.g., 10+ years)" required>
+      <input type="text" name="education" placeholder="Education (e.g., MBBS, FCPS)" required>
+      <input type="text" name="image_url" placeholder="Image URL (optional)">
+      <input type="text" name="city" placeholder="City" required>
+      <input type="number" name="rating" placeholder="Rating (1-5)" step="0.1" min="0" max="5" required>
+      <button type="submit" class="btn-primary" style="width:100%;">Add Doctor</button>
+      <button type="button" onclick="closeModal('addDoctorModal')" style="width:100%; margin-top:10px; padding:10px; background:#ccc; border:none; border-radius:40px; cursor:pointer;">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<!-- Success Popup Modal for Appointment Update -->
+{% if session.pop('appointment_updated', False) %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var message = "{{ session.pop('appointment_message', 'Appointment updated successfully!') }}";
+    
+    // Create modal
+    var modal = document.createElement('div');
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.background = 'rgba(0,0,0,0.5)';
+    modal.style.zIndex = '1000';
+    modal.style.display = 'flex';
+    modal.style.justifyContent = 'center';
+    modal.style.alignItems = 'center';
+    
+    modal.innerHTML = `
+        <div style="background:white; padding:40px; border-radius:12px; text-align:center; max-width:400px; margin:20px; box-shadow:0 5px 20px rgba(0,0,0,0.3);">
+            <div style="font-size:50px; color:#28a745; margin-bottom:15px;">✓</div>
+            <h3 style="color:#285943; margin-bottom:10px;">Success!</h3>
+            <p style="color:#333; margin-bottom:20px;">${message}</p>
+            <button onclick="this.closest('div').parentElement.remove()" 
+                    style="background:#285943; color:white; border:none; padding:10px 30px; border-radius:6px; cursor:pointer; font-size:16px;">OK</button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Auto remove after 3 seconds
+    setTimeout(function() {
+        if (modal.parentElement) {
+            modal.remove();
+        }
+    }, 3000);
+});
+</script>
+{% endif %}
+
+<script>
+  // Display current date
+  function displayDate() {
+    const dateElement = document.getElementById('currentDate');
+    if (dateElement) {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      dateElement.textContent = new Date().toLocaleDateString('en-US', options);
+    }
+  }
+  
+  // Toast Notification
+  function showToast(message, type = 'success') {
+    const existingToast = document.querySelector('.toast-notification');
+    if (existingToast) existingToast.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${type}`;
+    let icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
+    
+    toast.innerHTML = `${icon}<span class="toast-text">${message}</span><button class="close-toast" onclick="this.parentElement.remove()">&times;</button>`;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      if (toast) {
+        toast.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => toast.remove(), 300);
+      }
+    }, 3000);
+  }
+  
+  // Form submissions
+  document.getElementById('addUserForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    try {
+      const response = await fetch('{{ url_for("add_user") }}', { method: 'POST', body: formData });
+      const result = await response.json();
+      if (result.status === 'success') {
+        showToast(result.message, 'success');
+        closeModal('addUserModal');
+        setTimeout(() => location.reload(), 1500);
+      } else {
+        showToast(result.message, 'error');
+      }
+    } catch (error) {
+      showToast('Something went wrong!', 'error');
+    }
+  });
+  
+  document.getElementById('addDoctorForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    try {
+      const response = await fetch('{{ url_for("add_doctor") }}', { method: 'POST', body: formData });
+      const result = await response.json();
+      if (result.status === 'success') {
+        showToast(result.message, 'success');
+        closeModal('addDoctorModal');
+        setTimeout(() => location.reload(), 1500);
+      } else {
+        showToast(result.message, 'error');
+      }
+    } catch (error) {
+      showToast('Something went wrong!', 'error');
+    }
+  });
+  
+  // Modal Functions
+  function openAddUserModal() { document.getElementById("addUserModal").style.display = "block"; }
+  function openAddDoctorModal() { document.getElementById("addDoctorModal").style.display = "block"; }
+  function closeModal(modalId) { document.getElementById(modalId).style.display = "none"; }
+  
+  window.onclick = function(event) {
+    if (event.target == document.getElementById("addUserModal")) closeModal('addUserModal');
+    if (event.target == document.getElementById("addDoctorModal")) closeModal('addDoctorModal');
+  }
+  
+  // Panel Switcher
+  const navItems = document.querySelectorAll('.nav-item[data-panel]');
+  const panels = {
+    overview: document.getElementById('overviewPanel'),
+    usersDashboard: document.getElementById('usersDashboardPanel'),
+    appointmentsDashboard: document.getElementById('appointmentsDashboardPanel'),
+    doctorsDashboard: document.getElementById('doctorsDashboardPanel') ,
+    messagesDashboard: document.getElementById('messagesDashboardPanel') ,
+    paymentsDashboard: document.getElementById('paymentsDashboardPanel')  ,
+    ratingsDashboard: document.getElementById('ratingsDashboardPanel') ,
+    notificationsDashboard: document.getElementById('notificationsDashboardPanel')
+
+
+  }
+  
+  function activatePanel(panelId) {
+    Object.values(panels).forEach(p => p?.classList.remove('active-panel'));
+    navItems.forEach(item => item.classList.remove('active'));
+    if (panels[panelId]) panels[panelId].classList.add('active-panel');
+    const activeNav = Array.from(navItems).find(el => el.dataset.panel === panelId);
+    if (activeNav) activeNav.classList.add('active');
+  }
+  
+  navItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const panel = item.dataset.panel;
+      if (panel) activatePanel(panel);
+    });
+  });
+  
+  // Search Functions
+  function setupSearch(inputId, tableId) {
+    const input = document.getElementById(inputId);
+    const table = document.getElementById(tableId);
+    if (!input || !table) return;
+    input.addEventListener('keyup', function() {
+      const filter = this.value.toLowerCase();
+      const rows = table.querySelectorAll('tbody tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+      });
+    });
+  }
+  
+  setupSearch('userSearchInput', 'usersTable');
+  setupSearch('apptSearchInput', 'appointmentsTable');
+  setupSearch('docSearchInput', 'doctorsTable');
+  
+  function scrollToTop() { document.querySelector('.main-panel')?.scrollTo({ top: 0, behavior: 'smooth' }); }
+  
+  // Initialize
+  displayDate();
+</script>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <input type="hidden" id="flash-data" value='[
+      {% for category, message in messages %}
+        {"category": "{{ category }}", "message": "{{ message }}"}{% if not loop.last %},{% endif %}
+      {% endfor %}
+    ]'>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const flashData = document.getElementById('flash-data');
+        if (flashData) {
+          const messages = JSON.parse(flashData.value);
+          messages.forEach(msg => showToast(msg.message, msg.category));
+        }
+      });
+    </script>
+  {% endif %}
+{% endwith %}
+
+</body>
+</html>

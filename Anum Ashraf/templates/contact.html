@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - Doctor Appointment Hub{% endblock %}
+
+{% block content %}
+
+<style>
+.contact-hero {
+    background: linear-gradient(135deg, var(--forest) 0%, var(--deep-sage) 100%);
+    color: white;
+    padding: 100px 10%;
+    text-align: center;
+}
+.contact-hero h1 { font-size: 3em; margin-bottom: 20px; font-weight: 700; }
+.contact-hero p { font-size: 1.2em; max-width: 600px; margin: 0 auto; opacity: 0.9; }
+
+.contact-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    max-width: 1400px;
+    margin: 80px auto;
+    padding: 0 10%;
+}
+
+.contact-info, .contact-form-section {
+    background: var(--white);
+    padding: 50px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px var(--shadow);
+}
+
+.form-group { margin-bottom: 25px; }
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: var(--forest);
+    margin-bottom: 8px;
+}
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: white;
+    font-size: 16px;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px rgba(255,193,7,0.1);
+}
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+.submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--amber);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    color: white;
+}
+.submit-btn:hover {
+    background: #e6a800;
+    transform: translateY(-2px);
+}
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* POPUP STYLES */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.3s ease;
+    z-index: 9999;
+}
+
+.popup-overlay.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.popup-box {
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    width: 350px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.popup-box i {
+    font-size: 50px;
+    color: #28a745;
+    margin-bottom: 15px;
+}
+
+.popup-box h2 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.popup-box p {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.popup-box button {
+    padding: 10px 25px;
+    border: none;
+    background: var(--amber);
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+</style>
+
+<section class="contact-hero">
+    <h1>We're Here to Help</h1>
+    <p>Contact us anytime</p>
+</section>
+
+<div class="contact-container">
+    <div class="contact-form-section">
+        <h2>Send Message</h2>
+
+        <form method="POST" id="contactForm" action="/contact">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input type="text" name="name" id="name" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" name="email" id="email" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" name="phone" id="phone" class="form-control" placeholder="+92 XXX XXXXXXX">
+                </div>
+
+                <div class="form-group">
+                    <label>Subject *</label>
+                    <select name="subject" id="subject" class="form-control" required>
+                        <option value="">-- Select Subject --</option>
+                        <option value="General Inquiry">📋 General Inquiry</option>
+                        <option value="Appointment Booking">📅 Appointment Booking</option>
+                        <option value="Prescription Refill">💊 Prescription Refill</option>
+                        <option value="Medical Records">📄 Medical Records</option>
+                        <option value="Insurance & Billing">💰 Insurance & Billing</option>
+                        <option value="Emergency">🚨 Emergency</option>
+                        <option value="Feedback">⭐ Feedback</option>
+                        <option value="Complaint">⚠️ Complaint</option>
+                        <option value="Test Results">🔬 Test Results</option>
+                        <option value="Second Opinion">👨‍⚕️ Second Opinion</option>
+                        <option value="Telehealth Support">💻 Telehealth Support</option>
+                        <option value="Pharmacy Inquiry">💊 Pharmacy Inquiry</option>
+                        <option value="Partnership">🤝 Partnership</option>
+                        <option value="Job Application">💼 Job Application</option>
+                        <option value="Other">📝 Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Department *</label>
+                <select name="department" id="department" class="form-control" required>
+                    <option value="">-- Select Department --</option>
+                    <option value="Cardiology">❤️ Cardiology - Heart & Vascular</option>
+                    <option value="Neurology">🧠 Neurology - Brain & Nervous System</option>
+                    <option value="Pediatrics">👶 Pediatrics - Children's Health</option>
+                    <option value="Orthopedics">🦴 Orthopedics - Bones & Joints</option>
+                    <option value="General Medicine">🏥 General Medicine</option>
+                    <option value="Dermatology">🔬 Dermatology - Skin Care</option>
+                    <option value="Gynecology">👩‍⚕️ Gynecology & Obstetrics</option>
+                    <option value="Ophthalmology">👁️ Ophthalmology - Eye Care</option>
+                    <option value="Dentistry">🦷 Dentistry - Dental Care</option>
+                    <option value="Psychiatry">🧠 Psychiatry - Mental Health</option>
+                    <option value="Oncology">🎗️ Oncology - Cancer Care</option>
+                    <option value="Urology">💧 Urology - Urinary Tract</option>
+                    <option value="ENT">👂 ENT - Ear, Nose & Throat</option>
+                    <option value="Emergency Medicine">🚑 Emergency Medicine</option>
+                    <option value="Radiology">📷 Radiology - Medical Imaging</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Message *</label>
+                <textarea name="message" id="message" class="form-control" placeholder="Please describe your query..." required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+    </div>
+</div>
+
+<!-- SUCCESS POPUP -->
+<div id="successPopup" class="popup-overlay">
+    <div class="popup-box">
+        <i class="fas fa-check-circle"></i>
+        <h2>Thank You!</h2>
+        <p>Your message has been sent successfully</p>
+        <button onclick="closePopup()">OK</button>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contactForm');
+    const popup = document.getElementById('successPopup');
+    const submitBtn = contactForm.querySelector('.submit-btn');
+
+    // Test dropdowns - console log to check if they exist
+    const subjectSelect = document.getElementById('subject');
+    const deptSelect = document.getElementById('department');
+    
+    console.log("Subject dropdown:", subjectSelect);
+    console.log("Department dropdown:", deptSelect);
+    
+    if(subjectSelect) {
+        console.log("Subject options:", subjectSelect.options.length);
+    }
+    
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const subject = document.getElementById('subject').value;
+        const department = document.getElementById('department').value;
+        const message = document.getElementById('message').value.trim();
+        
+        console.log("Subject value:", subject);
+        console.log("Department value:", department);
+        
+        if(!name || !email || !subject || !department || !message) {
+            alert("Please fill in all required fields (*)");
+            return;
+        }
+        
+        if(!email.includes('@')) {
+            alert("Please enter a valid email address");
+            return;
+        }
+
+        submitBtn.innerText = "Sending...";
+        submitBtn.disabled = true;
+
+        const formData = new FormData(contactForm);
+
+        fetch("/contact", {
+            method: "POST",
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                popup.classList.add('show');
+                contactForm.reset();
+            } else {
+                alert("Error submitting form. Please try again.");
+            }
+            submitBtn.innerText = "Send Message";
+            submitBtn.disabled = false;
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Server error. Please try again.");
+            submitBtn.innerText = "Send Message";
+            submitBtn.disabled = false;
+        });
+    });
+});
+
+function closePopup() {
+    document.getElementById('successPopup').classList.remove('show');
+}
+
+// Close popup when clicking outside
+document.getElementById('successPopup').addEventListener('click', function(e) {
+    if(e.target === this) {
+        closePopup();
+    }
+});
+</script>
+
+{% endblock %}

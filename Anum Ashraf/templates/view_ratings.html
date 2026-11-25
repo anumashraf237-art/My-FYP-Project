@@ -1,0 +1,19 @@
+<h2>User Ratings</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>User</th>
+        <th>Doctor</th>
+        <th>Rating</th>
+        <th>Review</th>
+    </tr>
+
+    {% for r in ratings %}
+    <tr>
+        <td>{{ r.user_name }}</td>
+        <td>{{ r.doctor_name }}</td>
+        <td>{{ r.rating }}/5</td>
+        <td>{{ r.review }}</td>
+    </tr>
+    {% endfor %}
+</table>

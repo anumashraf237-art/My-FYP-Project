@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Profile - Doctor Appointment Hub</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: linear-gradient(135deg, #1a5d2c 0%, #2d8a4c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .profile-card {
+            max-width: 600px;
+            margin: 50px auto;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border: 1px solid #f0ad4e;
+        }
+        h2 {
+            text-align: center;
+            color: #1a5d2c;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0ad4e;
+            padding-bottom: 10px;
+        }
+        .doctor-name {
+            font-size: 24px;
+            color: #1a5d2c;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .info-row {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .info-label {
+            width: 130px;
+            font-weight: bold;
+            color: #1a5d2c;
+        }
+        .info-value {
+            flex: 1;
+            color: #333;
+        }
+        .rating {
+            color: #f0ad4e;
+        }
+        .btn-back {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            padding: 10px;
+            background: #1a5d2c;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-back:hover {
+            background: #2d8a4c;
+        }
+    </style>
+</head>
+<body>
+<div class="profile-card">
+    <h2>👨‍⚕️ Doctor Profile</h2>
+    <div class="doctor-name">Dr. {{ doctor.name }}</div>
+    
+    <div class="info-row">
+        <div class="info-label">Specialization:</div>
+        <div class="info-value">{{ doctor.specialization }}</div>
+    </div>
+    <div class="info-row">
+        <div class="info-label">Experience:</div>
+        <div class="info-value">{{ doctor.experience }}</div>
+    </div>
+    <div class="info-row">
+        <div class="info-label">Education:</div>
+        <div class="info-value">{{ doctor.education }}</div>
+    </div>
+    <div class="info-row">
+        <div class="info-label">City:</div>
+        <div class="info-value">{{ doctor.city }}</div>
+    </div>
+    <div class="info-row">
+        <div class="info-label">Rating:</div>
+        <div class="info-value rating">{{ doctor.rating }}/5</div>
+    </div>
+    <div class="info-row">
+        <div class="info-label">Email:</div>
+        <div class="info-value">{{ doctor.email }}</div>
+    </div>
+    
+    <a href="{{ url_for('doctors') }}" class="btn-back">← Back to Doctors List</a>
+</div>
+</body>
+</html>

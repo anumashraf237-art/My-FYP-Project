@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Symptom Checker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1f3b32, #285943);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        h1 {
+            color: #1f3b32;
+            font-size: 28px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        h1 i {
+            background: #1f7a63;
+            padding: 12px;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+        }
+        .subtitle {
+            color: #555;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .input-group {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            resize: vertical;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            box-sizing: border-box;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #1f7a63;
+        }
+        .voice-btn {
+            background: #1f7a63;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .voice-btn:hover {
+            background: #145a47;
+            transform: scale(1.05);
+        }
+        .voice-btn.recording {
+            background: #dc3545;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+        .voice-status {
+            font-size: 13px;
+            color: #1f7a63;
+            margin-top: 10px;
+            display: none;
+            font-weight: bold;
+            padding: 8px 12px;
+            background: #e8f5e9;
+            border-radius: 8px;
+        }
+        .analyze-btn {
+            background: #1f7a63;
+            color: white;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .analyze-btn:hover {
+            background: #145a47;
+            transform: translateY(-2px);
+        }
+        .result {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .doctor-card {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: all 0.3s;
+        }
+        .doctor-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateX(8px);
+            border-left: 4px solid #1f7a63;
+        }
+        .doctor-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .doctor-info h4 {
+            color: #1f3b32;
+            font-size: 18px;
+            margin: 0 0 5px 0;
+        }
+        .doctor-info p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .book-btn {
+            background: #1f7a63;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .book-btn:hover {
+            background: #145a47;
+            transform: scale(1.02);
+        }
+        .emergency {
+            background: #ffe6e6;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            background: white;
+            border-radius: 15px;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1f7a63;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .specialization-badge {
+            display: inline-block;
+            background: #1f7a63;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .source-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .source-badge.ai {
+            background: #1f7a63;
+            color: white;
+        }
+        .source-badge.keyword {
+            background: #6c757d;
+            color: white;
+        }
+        .quick-chips {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .chip {
+            background: #e8f5e9;
+            color: #1f3b32;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #1f7a63;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chip:hover {
+            background: #1f7a63;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>
+                <i class="fas fa-stethoscope"></i>
+                AI Symptom Checker
+            </h1>
+            <div class="subtitle">
+                <i class="fas fa-language"></i> Urdu, English, ya dono mein symptoms likhein — AI aapko sahi doctor suggest karega
+            </div>
+            
+            <div class="quick-chips">
+                <span class="chip" onclick="addSymptom('Mujhe bukhar hai aur body mein dard hai')"><i class="fas fa-temperature-high"></i> Fever + Body Pain</span>
+                <span class="chip" onclick="addSymptom('Meri chati mein dard hai aur saans lene mein takleef')"><i class="fas fa-heartbeat"></i> Chest Pain</span>
+                <span class="chip" onclick="addSymptom('Mera pet dard kar raha hai aur gas ban rahi hai')"><i class="fas fa-stomach"></i> Stomach Pain</span>
+                <span class="chip" onclick="addSymptom('Mere daant mein dard hai aur masooray se khoon ata hai')"><i class="fas fa-tooth"></i> Toothache</span>
+                <span class="chip" onclick="addSymptom('Mera sar dard kar raha hai aur chakkar ate hain')"><i class="fas fa-head-side-vr"></i> Headache</span>
+                <span class="chip" onclick="addSymptom('Meri aankh lal hai aur khujli ho rahi hai')"><i class="fas fa-eye"></i> Eye Problem</span>
+            </div>
+            
+            <div class="input-group">
+                <textarea id="symptoms" rows="4" placeholder="Describe your symptoms in Urdu, English, or mix... Example: 'Mujhe 2 din se tez bukhar hai, khansi aa rahi hai'"></textarea>
+                <button type="button" class="voice-btn" id="voiceBtn" title="Click and speak your symptoms">
+                    <i class="fas fa-microphone"></i>
+                </button>
+            </div>
+            <div id="voiceStatus" class="voice-status">
+                <i class="fas fa-microphone-alt"></i> Listening... Speak now
+            </div>
+            
+            <button class="analyze-btn" onclick="checkSymptoms()">
+                <i class="fas fa-robot"></i> Analyze Symptoms
+            </button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 20px; color: #1f3b32;">
+                <i class="fas fa-brain"></i> AI is analyzing your symptoms...
+            </p>
+        </div>
+        
+        <div id="result" class="result card"></div>
+    </div>
+    
+    <script>
+        // Voice Input
+        let recognition = null;
+        let isRecording = false;
+        const voiceBtn = document.getElementById('voiceBtn');
+        const voiceStatus = document.getElementById('voiceStatus');
+        const symptomsTextarea = document.getElementById('symptoms');
+        
+        const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        if (SpeechRecognitionAPI) {
+            recognition = new SpeechRecognitionAPI();
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            recognition.lang = 'ur-PK';
+            
+            recognition.onstart = function() {
+                isRecording = true;
+                voiceBtn.classList.add('recording');
+                voiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
+                voiceStatus.style.display = 'block';
+                voiceStatus.innerHTML = '<i class="fas fa-microphone-alt"></i> Listening... Please speak now';
+                voiceStatus.style.background = '#e8f5e9';
+            };
+            
+            recognition.onend = function() {
+                isRecording = false;
+                voiceBtn.classList.remove('recording');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                setTimeout(() => {
+                    if (voiceStatus.style.display !== 'none') {
+                        voiceStatus.style.display = 'none';
+                    }
+                }, 1500);
+            };
+            
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                symptomsTextarea.value = transcript;
+                voiceStatus.innerHTML = '<i class="fas fa-check-circle"></i> Captured: "' + transcript + '"';
+                voiceStatus.style.background = '#d4edda';
+                setTimeout(() => checkSymptoms(), 800);
+            };
+            
+            recognition.onerror = function(event) {
+                voiceStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error: ' + event.error;
+                voiceStatus.style.background = '#ffe6e6';
+                voiceStatus.style.color = '#dc3545';
+                setTimeout(() => {
+                    voiceStatus.style.display = 'none';
+                }, 3000);
+                voiceBtn.classList.remove('recording');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                isRecording = false;
+            };
+        } else {
+            voiceBtn.style.display = 'none';
+        }
+        
+        function toggleVoiceInput() {
+            if (!recognition) {
+                alert('Voice input not supported');
+                return;
+            }
+            if (isRecording) {
+                recognition.stop();
+            } else {
+                try {
+                    voiceStatus.style.display = 'block';
+                    voiceStatus.innerHTML = '<i class="fas fa-microphone-alt"></i> Requesting microphone permission...';
+                    voiceStatus.style.background = '#e8f5e9';
+                    recognition.start();
+                } catch (e) {
+                    alert('Please click the mic button again');
+                }
+            }
+        }
+        
+        voiceBtn.addEventListener('click', toggleVoiceInput);
+        
+        function addSymptom(text) {
+            symptomsTextarea.value = text;
+            symptomsTextarea.focus();
+        }
+        
+        async function checkSymptoms() {
+            const symptoms = symptomsTextarea.value;
+            if (!symptoms.trim()) {
+                alert('Please describe your symptoms');
+                return;
+            }
+            
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/check-symptoms', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({symptoms_text: symptoms})
+                });
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                alert('Something went wrong. Please try again.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        function displayResults(data) {
+            if (!data.success) {
+                alert(data.error || 'Analysis failed');
+                return;
+            }
+            
+            const analysis = data.analysis;
+            const doctors = data.recommended_doctors;
+            let sourceClass = analysis.source === 'AI' ? 'ai' : 'keyword';
+            let sourceText = analysis.source === 'AI' ? '<i class="fas fa-robot"></i> AI Analysis' : '<i class="fas fa-keyboard"></i> Keyword Matching';
+            
+            let html = '<h2><i class="fas fa-chart-line"></i> Analysis Results</h2>';
+            
+            if (analysis.emergency) {
+                html += `<div class="emergency"><i class="fas fa-ambulance"></i> <strong>EMERGENCY:</strong> ${analysis.emergency_advice}</div>`;
+            }
+            
+            html += `
+                <p><strong><i class="fas fa-user-md"></i> Suggested Specialist:</strong> <span class="specialization-badge">${analysis.specialization}</span> <span class="source-badge ${sourceClass}">${sourceText}</span></p>
+                <p><i class="fas fa-brain"></i> <strong>Reasoning:</strong> ${analysis.reasoning}</p>
+                <hr>
+                <h3><i class="fas fa-hospital-user"></i> Recommended Doctors</h3>
+            `;
+            
+            if (doctors && doctors.length > 0) {
+                doctors.forEach(doctor => {
+                    html += `
+                        <div class="doctor-card">
+                            <div class="doctor-header">
+                                <div class="doctor-info">
+                                    <h4><i class="fas fa-user-circle"></i> Dr. ${doctor.name}</h4>
+                                    <p><i class="fas fa-stethoscope"></i> <strong>Specialization:</strong> ${doctor.specialization}</p>
+                                    <p><i class="fas fa-calendar-alt"></i> <strong>Experience:</strong> ${doctor.experience || 'N/A'}</p>
+                                    <p><i class="fas fa-graduation-cap"></i> <strong>Education:</strong> ${doctor.education || 'N/A'}</p>
+                                    <p><i class="fas fa-map-marker-alt"></i> <strong>City:</strong> ${doctor.city || 'Pakistan'}</p>
+                                    <p><i class="fas fa-star" style="color: #ffc107;"></i> <strong>Rating:</strong> ${doctor.rating || 4.0}/5</p>
+                                </div>
+                                <!-- ✅ FIXED: Proper link to appointment page -->
+                                <a href="/appointment?doctor_id=${doctor.id}&doctor_name=${encodeURIComponent(doctor.name)}&specialization=${encodeURIComponent(doctor.specialization)}" class="book-btn" style="text-decoration: none; display: inline-block;">
+                                    <i class="fas fa-calendar-check"></i> Book Appointment
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                html += `<p>No doctors found. Please contact support.</p>`;
+            }
+            
+            document.getElementById('result').innerHTML = html;
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

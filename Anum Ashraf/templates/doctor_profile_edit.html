@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Edit Doctor Profile</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    margin:0;
+    background: linear-gradient(135deg,#dce6dc,#b7c9b5);
+}
+
+/* CONTAINER */
+.container{
+    width: 520px;
+    margin: 50px auto;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    border:1px solid #a3b18a;
+}
+
+/* TITLE */
+h2{
+    text-align:center;
+    margin-bottom:20px;
+    color:#3a5a40;
+}
+
+/* LABEL */
+label{
+    font-weight:bold;
+    display:block;
+    margin-top:10px;
+    color:#3a5a40;
+}
+
+/* INPUT */
+input{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    border-radius:8px;
+    border:1px solid #a3b18a;
+    outline:none;
+}
+
+input:focus{
+    border-color:#3a5a40;
+}
+
+/* BUTTON */
+button{
+    width:100%;
+    padding:12px;
+    margin-top:20px;
+    background:#3a5a40;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#2f4f34;
+}
+
+/* BACK LINK */
+.back{
+    display:block;
+    text-align:center;
+    margin-top:15px;
+    color:#3a5a40;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.back:hover{
+    text-decoration:underline;
+}
+
+/* FLASH */
+.flash{
+    background:#3a5a40;
+    color:white;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:10px;
+    text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Edit Doctor Profile</h2>
+
+    <!-- FLASH MESSAGE -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- FORM -->
+    <form method="POST">
+
+        <label>Name</label>
+        <input type="text" name="name" value="{{ doctor.name }}" required>
+
+        <label>Email</label>
+        <input type="email" name="email" value="{{ doctor.email }}" required>
+
+        <label>Password</label>
+        <input type="text" name="password" value="{{ doctor.password }}">
+
+        <label>Specialization</label>
+        <input type="text" name="specialization" value="{{ doctor.specialization }}">
+
+        <label>Experience</label>
+        <input type="text" name="experience" value="{{ doctor.experience }}">
+
+        <label>Education</label>
+        <input type="text" name="education" value="{{ doctor.education }}">
+
+        <label>City</label>
+        <input type="text" name="city" value="{{ doctor.city }}">
+
+        <label>Rating</label>
+        <input type="text" name="rating" value="{{ doctor.rating }}">
+
+        <button type="submit">Save Changes</button>
+
+    </form>
+
+    <a href="/doctor-dashboard" class="back">← Back to Dashboard</a>
+
+</div>
+
+</body>
+</html>

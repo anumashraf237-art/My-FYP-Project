@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Edit Appointment - Doctor Appointment Hub{% endblock %}
+
+{% block content %}
+<section style="max-width:800px; margin:60px auto; background:white; padding:40px; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+  <h2 style="text-align:center; color:#285943; margin-bottom:30px;">✏️ Edit Appointment</h2>
+
+  <form action="{{ url_for('edit_appointment', appointment_id=appointment.id) }}" method="POST" style="display:grid; gap:20px;" id="editForm">
+    
+    <!-- Doctor Name - Readonly (can't change) -->
+    <div>
+      <label style="font-weight:600; color:#2c5530;">Doctor Name</label>
+      <input type="text" value="Dr. {{ appointment.doctor_name }}" disabled
+             style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px; background:#f5f5f5;">
+    </div>
+
+    <!-- Specialization - Readonly (can't change) -->
+    <div>
+      <label style="font-weight:600; color:#2c5530;">Specialization</label>
+      <input type="text" value="{{ appointment.specialization }}" disabled
+             style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px; background:#f5f5f5;">
+    </div>
+
+    <!-- Patient Name - Readonly -->
+    <div>
+      <label style="font-weight:600; color:#2c5530;">Patient Name</label>
+      <input type="text" value="{{ appointment.patient_name }}" disabled
+             style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px; background:#f5f5f5;">
+    </div>
+
+    <!-- Email - Readonly -->
+    <div>
+      <label style="font-weight:600; color:#2c5530;">Email</label>
+      <input type="email" value="{{ appointment.email }}" disabled
+             style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px; background:#f5f5f5;">
+    </div>
+
+    <!-- Date - Editable -->
+    <div>
+      <label style="font-weight:600; color:#2c5530;">Appointment Date</label>
+      <input type="date" name="appointment_date" value="{{ appointment.appointment_date }}" required
+             style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+    </div>
+
+    <!-- Time Slot - Editable -->
+    <div>
+      <label style="font-weight:600; color:#2c5530;">Time Slot</label>
+      <select name="appointment_time" required
+              style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">
+        <option value="09:00 AM - 10:00 AM" {% if appointment.appointment_time == '09:00 AM - 10:00 AM' %}selected{% endif %}>09:00 AM - 10:00 AM</option>
+        <option value="10:00 AM - 11:00 AM" {% if appointment.appointment_time == '10:00 AM - 11:00 AM' %}selected{% endif %}>10:00 AM - 11:00 AM</option>
+        <option value="11:00 AM - 12:00 PM" {% if appointment.appointment_time == '11:00 AM - 12:00 PM' %}selected{% endif %}>11:00 AM - 12:00 PM</option>
+        <option value="01:00 PM - 02:00 PM" {% if appointment.appointment_time == '01:00 PM - 02:00 PM' %}selected{% endif %}>01:00 PM - 02:00 PM</option>
+        <option value="02:00 PM - 03:00 PM" {% if appointment.appointment_time == '02:00 PM - 03:00 PM' %}selected{% endif %}>02:00 PM - 03:00 PM</option>
+        <option value="03:00 PM - 04:00 PM" {% if appointment.appointment_time == '03:00 PM - 04:00 PM' %}selected{% endif %}>03:00 PM - 04:00 PM</option>
+      </select>
+    </div>
+
+    <!-- Message - Editable -->
+    <div>
+      <label style="font-weight:600; color:#2c5530;">Message / Concern</label>
+      <textarea name="message" rows="4"
+                style="width:100%; padding:12px; border:1px solid #ccc; border-radius:6px;">{{ appointment.message or '' }}</textarea>
+    </div>
+
+    <div style="text-align:center;">
+      <button type="submit"
+              style="background:#f9a826; color:white; border:none; padding:14px 30px; font-size:1.1em; font-weight:600; border-radius:8px; cursor:pointer;">
+        💾 Save Changes
+      </button>
+    </div>
+  </form>
+
+  <div style="text-align:center; margin-top:25px;">
+    <a href="{{ url_for('admin_dashboard') }}"
+       style="color:#285943; text-decoration:none; font-weight:500;">← Back to Dashboard</a>
+  </div>
+</section>
+
+<!-- Success Popup Modal -->
+<div id="successModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+  <div style="background:white; padding:40px; border-radius:12px; text-align:center; max-width:400px; margin:20px; box-shadow:0 5px 20px rgba(0,0,0,0.3);">
+    <div style="font-size:50px; color:#28a745; margin-bottom:15px;">✓</div>
+    <h3 style="color:#285943; margin-bottom:10px;">Success!</h3>
+    <p style="color:#333; margin-bottom:20px;" id="successMessage">Appointment updated successfully!</p>
+    <button onclick="redirectToDashboard()" style="background:#285943; color:white; border:none; padding:10px 30px; border-radius:6px; cursor:pointer; font-size:16px;">OK</button>
+  </div>
+</div>
+
+<script>
+// Show popup if session message exists
+{% if session.pop('appointment_updated', False) %}
+var message = "{{ session.pop('appointment_message', 'Appointment updated successfully!') }}";
+if (message) {
+    document.getElementById('successMessage').textContent = message;
+    document.getElementById('successModal').style.display = 'flex';
+}
+{% endif %}
+
+// Redirect to dashboard
+function redirectToDashboard() {
+    window.location.href = "{{ url_for('admin_dashboard') }}";
+}
+
+// Handle form submission - show loading state
+document.getElementById('editForm').addEventListener('submit', function(e) {
+    var submitBtn = this.querySelector('button[type="submit"]');
+    var originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '⏳ Saving...';
+    submitBtn.disabled = true;
+    
+    // Re-enable after 3 seconds if something goes wrong
+    setTimeout(function() {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 3000);
+});
+</script>
+{% endblock %}

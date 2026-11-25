@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Rate Your Experience{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: column; height: 80vh; text-align: center;">
+    <h2>Before you go...</h2>
+    <p>How was your experience with Doctor Appointment Hub?</p>
+
+    <form method="POST" style="margin-top: 20px;">
+        <div class="rating" style="font-size: 2em; color: #f5b50a;">
+            <label><input type="radio" name="rating" value="1" required>⭐</label>
+            <label><input type="radio" name="rating" value="2">⭐⭐</label>
+            <label><input type="radio" name="rating" value="3">⭐⭐⭐</label>
+            <label><input type="radio" name="rating" value="4">⭐⭐⭐⭐</label>
+            <label><input type="radio" name="rating" value="5">⭐⭐⭐⭐⭐</label>
+        </div>
+
+        <textarea name="feedback" placeholder="Optional feedback..." 
+            style="margin-top: 20px; width: 80%; height: 100px; border-radius: 8px; padding: 10px;"></textarea>
+
+        <br><br>
+        <button type="submit" class="btn btn-primary"
+            style="background: var(--amber); color: #222; padding: 10px 25px; border-radius: 8px; font-weight: 600;">
+            Submit & Logout
+        </button>
+    </form>
+</div>
+{% endblock %}
